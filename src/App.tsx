@@ -10,7 +10,7 @@ import {
   setupIonicReact,
 } from "@ionic/react";
 import { IonReactRouter } from "@ionic/react-router";
-import { addCircleOutline, calendarOutline, musicalNotesOutline, peopleOutline } from "ionicons/icons";
+import { addCircleOutline, bandageOutline, calendarOutline, discOutline, musicalNotesOutline, peopleOutline, radioOutline } from "ionicons/icons";
 import Dashboard from "./pages/Dashboard";
 
 /* Core CSS required for Ionic components to work properly */
@@ -30,7 +30,7 @@ import "@ionic/react/css/flex-utils.css";
 import "@ionic/react/css/display.css";
 
 /* Theme variables */
-import "./theme/variables.css";
+// import "./theme/variables.css";
 
 setupIonicReact();
 
@@ -43,7 +43,7 @@ const App: React.FC = () => (
         </IonRouterOutlet>
         <IonTabBar slot="bottom">
           <IonTabButton tab="bands" href="/bands">
-            <IonIcon aria-hidden="true" icon={musicalNotesOutline} />
+            <IonIcon aria-hidden="true" icon={radioOutline} />
             <IonLabel>Bands</IonLabel>
           </IonTabButton>
           <IonTabButton tab="dashboard" href="/">
