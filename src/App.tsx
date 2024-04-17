@@ -35,6 +35,7 @@ import "@ionic/react/css/flex-utils.css";
 import "@ionic/react/css/display.css";
 import Members from "./pages/Members";
 import Bands from "./pages/Bands";
+import AddEvent from "./pages/AddEvent";
 
 /* Theme variables */
 // import "./theme/variables.css";
@@ -46,10 +47,10 @@ const App: React.FC = () => (
     <IonReactRouter>
       <IonTabs>
         <IonRouterOutlet>
-          <Redirect exact path="/" to="/dashboard" />
           <Route exact path="/dashboard" render={() => <Dashboard />} />
           <Route exact path="/bands" render={() => <Bands />} />
           <Route exact path="/members" render={() => <Members />} />
+          <Route exact path="/add-event" render={() => <AddEvent />} />
         </IonRouterOutlet>
         <IonTabBar slot="bottom">
           <IonTabButton tab="bands" href="/bands">
