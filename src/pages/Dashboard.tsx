@@ -1,5 +1,5 @@
 import { IonContent, IonPage } from "@ionic/react";
-import EventCard from "../components/pages/dashboard/EventCard";
+import EventCard from "../components/dashboard/EventCard";
 import { EventStatus } from "../types/event";
 
 const DUMMY_DATA = [

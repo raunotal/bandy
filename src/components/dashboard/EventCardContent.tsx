@@ -1,7 +1,7 @@
 import { IonButton, IonCardContent, IonContent, IonIcon, IonItem, IonText } from "@ionic/react";
 import React from "react";
-import { DashboardEvent } from "../../../types/event";
-import { extractDate, extractTime } from "../../../helpers/event";
+import { DashboardEvent } from "../../types/event";
+import { extractDate, extractTime } from "../../helpers/event";
 import { arrowForwardOutline } from "ionicons/icons";
 
 const EventCardContent = (eventItem: DashboardEvent) => {
