@@ -34,6 +34,7 @@ import "@ionic/react/css/text-transformation.css";
 import "@ionic/react/css/flex-utils.css";
 import "@ionic/react/css/display.css";
 import Members from "./pages/Members";
+import Bands from "./pages/Bands";
 
 /* Theme variables */
 // import "./theme/variables.css";
@@ -47,6 +48,7 @@ const App: React.FC = () => (
         <IonRouterOutlet>
           <Redirect exact path="/" to="/dashboard" />
           <Route exact path="/dashboard" render={() => <Dashboard />} />
+          <Route exact path="/bands" render={() => <Bands />} />
           <Route exact path="/members" render={() => <Members />} />
         </IonRouterOutlet>
         <IonTabBar slot="bottom">

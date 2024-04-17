@@ -1,0 +1,3 @@
+interface Band {
+  name: string;
+}
