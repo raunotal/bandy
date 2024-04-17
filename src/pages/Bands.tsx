@@ -1,5 +1,5 @@
 import { IonPage, IonContent } from '@ionic/react';
-import BandCard from '../components/pages/bands/BandCard';
+import BandCard from '../components/bands/BandCard';
 
 const DUMMY_DATA = [
   {

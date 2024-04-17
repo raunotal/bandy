@@ -2,7 +2,7 @@ import {
   IonPage,
   IonContent,
 } from "@ionic/react";
-import MemberCard from "../components/pages/members/MemberCard";
+import MemberCard from "../components/members/MemberCard";
 
 const DUMMY_DATA = [
   {

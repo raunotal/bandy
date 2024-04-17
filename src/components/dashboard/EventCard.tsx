@@ -2,7 +2,7 @@ import { IonCard, IonCardHeader, IonCardSubtitle, IonCardTitle } from "@ionic/re
 import React from "react";
 import EventCardContent from "./EventCardContent";
 import EventCardSubtitle from "./EventCardSubtitle";
-import { DashboardEvent } from "../../../types/event";
+import { DashboardEvent } from "../../types/event";
 
 const EventCard = (dashboardEvent: DashboardEvent) => {
   return (

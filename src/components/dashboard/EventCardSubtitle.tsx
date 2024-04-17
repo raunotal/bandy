@@ -1,7 +1,7 @@
 import { IonCardSubtitle, IonIcon } from "@ionic/react";
 import { peopleOutline, musicalNotes } from "ionicons/icons";
-import { getTitleTypeFromEventStatus } from "../../../helpers/event";
-import { DashboardEvent } from "../../../types/event";
+import { getTitleTypeFromEventStatus } from "../../helpers/event";
+import { DashboardEvent } from "../../types/event";
 
 const EventCardSubtitle = (eventItem: DashboardEvent) => {
   return (
