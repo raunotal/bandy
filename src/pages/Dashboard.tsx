@@ -81,9 +81,9 @@ const Dashboard = () => {
   return (
     <IonPage>
       <IonContent>
-        {DUMMY_DATA.map((eventItem, index) => (
+        {DUMMY_DATA.map((eventItem, index) =>
           <EventCard {...eventItem} key={index} />
-        ))}
+        )}
       </IonContent>
     </IonPage>
   );
