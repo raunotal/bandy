@@ -1,4 +1,4 @@
-import { Route } from "react-router-dom";
+import { Redirect, Route } from "react-router-dom";
 import {
   IonApp,
   IonIcon,
@@ -10,7 +10,12 @@ import {
   setupIonicReact,
 } from "@ionic/react";
 import { IonReactRouter } from "@ionic/react-router";
-import { addCircleOutline, bandageOutline, calendarOutline, discOutline, musicalNotesOutline, peopleOutline, radioOutline } from "ionicons/icons";
+import {
+  addCircleOutline,
+  calendarOutline,
+  peopleOutline,
+  radioOutline,
+} from "ionicons/icons";
 import Dashboard from "./pages/Dashboard";
 
 /* Core CSS required for Ionic components to work properly */
@@ -28,6 +33,7 @@ import "@ionic/react/css/text-alignment.css";
 import "@ionic/react/css/text-transformation.css";
 import "@ionic/react/css/flex-utils.css";
 import "@ionic/react/css/display.css";
+import Members from "./pages/Members";
 
 /* Theme variables */
 // import "./theme/variables.css";
@@ -39,14 +45,16 @@ const App: React.FC = () => (
     <IonReactRouter>
       <IonTabs>
         <IonRouterOutlet>
-          <Route exact path="/" render={() => <Dashboard />} />
+          <Redirect exact path="/" to="/dashboard" />
+          <Route exact path="/dashboard" render={() => <Dashboard />} />
+          <Route exact path="/members" render={() => <Members />} />
         </IonRouterOutlet>
         <IonTabBar slot="bottom">
           <IonTabButton tab="bands" href="/bands">
             <IonIcon aria-hidden="true" icon={radioOutline} />
             <IonLabel>Bands</IonLabel>
           </IonTabButton>
-          <IonTabButton tab="dashboard" href="/">
+          <IonTabButton tab="dashboard" href="/dashboard">
             <IonIcon icon={calendarOutline} />
             <IonLabel>Gigs</IonLabel>
           </IonTabButton>
