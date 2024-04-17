@@ -53,8 +53,7 @@ const AddEvent = () => {
             <IonInput label="Location" labelPlacement="floating"></IonInput>
           </IonItem>
           <IonItem>
-            <IonLabel position="stacked">Event Type</IonLabel>
-            <IonSelect placeholder="Select One">
+            <IonSelect label='Event type' labelPlacement='floating'>
               <IonSelectOption value="gig">Gig</IonSelectOption>
               <IonSelectOption value="rehearsal">Rehearsal</IonSelectOption>
             </IonSelect>
@@ -63,17 +62,12 @@ const AddEvent = () => {
             <IonTextarea label="Additional information:" labelPlacement="floating" autoGrow></IonTextarea>
           </IonItem>
           <IonItem>
-            {/* <IonSelect aria-label="Default label" labelPlacement="floating" multiple={true}>
+            <IonSelect label="Members" labelPlacement="floating" multiple={true}>
               {members.map((member) => (
                 <IonSelectOption key={member.id} value={member.id}>
                   {member.name}
                 </IonSelectOption>
               ))}
-            </IonSelect> */}
-            <IonSelect aria-label="Fruit" placeholder="Select all fruits that apply" multiple={true}>
-              <IonSelectOption value="apples">Apples</IonSelectOption>
-              <IonSelectOption value="oranges">Oranges</IonSelectOption>
-              <IonSelectOption value="bananas">Bananas</IonSelectOption>
             </IonSelect>
           </IonItem>
           <IonButton expand="block" onClick={() => console.log('Event Saved:', { message: "Dummy save event" })}>
