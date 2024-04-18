@@ -50,6 +50,9 @@ const AddEvent = () => {
             </IonModal>
           </IonItem>
           <IonItem>
+            <IonInput label="Venue" labelPlacement="floating"></IonInput>
+          </IonItem>
+          <IonItem>
             <IonInput label="Location" labelPlacement="floating"></IonInput>
           </IonItem>
           <IonItem>
