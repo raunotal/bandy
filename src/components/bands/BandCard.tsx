@@ -1,4 +1,5 @@
 import { IonCard, IonCardHeader, IonCardTitle } from '@ionic/react'
+import { Band } from '../../../types/band';
 
 const BandCard = (props: Band) => {
   const { name } = props

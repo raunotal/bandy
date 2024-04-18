@@ -9,7 +9,7 @@ module.exports = {
   parserOptions: {
     ecmaVersion: 2021,
     sourceType: 'module',
-    project: './tsconfig.json',
+    project: ['./tsconfig.json', 'tsconfig.node.json'],
     ecmaFeatures: {
       jsx: true
     }
@@ -17,6 +17,7 @@ module.exports = {
   plugins: ['@typescript-eslint'],
   extends: [
     "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
     "plugin:react/recommended",
     "plugin:react-hooks/recommended",
   ],
@@ -25,9 +26,9 @@ module.exports = {
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
     "react/react-in-jsx-scope": "off"
   },
-  // settings: {
-  //   react: {
-  //     version: 'detect'
-  //   }
-  // }
+  settings: {
+    react: {
+      version: '18'
+    }
+  }
 };
