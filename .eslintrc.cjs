@@ -24,7 +24,7 @@ module.exports = {
   rules: {
     'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
-    "react/react-in-jsx-scope": "off"
+    "react/react-in-jsx-scope": "off",
   },
   settings: {
     react: {

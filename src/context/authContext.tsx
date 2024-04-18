@@ -1,16 +1,44 @@
-// import { createUserWithEmailAndPassword } from "firebase/auth";
-// import { auth } from "../config/firebaseConfig";
-// import { AuthContextProviderProps } from "../../types/context/authContext";
-//
-// const AuthContextProvider: React.FC<AuthContextProviderProps> = ({ children }) => {
-//
-//   const signUp = (data: CreateNewUser) => {
-//     createUserWithEmailAndPassword(auth, email, password);
-//   }
-//
-//   return (
-//     <AuthContext.Provider value={{ singUp }}>
-//       {children}
-//     </AuthContext.Provider>
-//   );
-// }
+import { createContext, FC, useContext, useState } from 'react';
+import { getAuth, signInWithCustomToken } from 'firebase/auth';
+import { AuthContextProviderProps } from '../../types/context/authContext';
+import { AuthenticationContext, CreateNewUser, User } from '../../types/authentication';
+import { Callable } from '../../enums/callable';
+import { getFunctions, httpsCallable } from 'firebase/functions';
+
+const defaultContext: AuthenticationContext = {
+  signUp: async () => {
+    throw new Error('Should be implemented in AuthContextProvider.');
+  },
+  loading: true
+};
+
+const AuthContext = createContext<AuthenticationContext>(defaultContext);
+
+export const useAuth = () => useContext(AuthContext);
+
+export const AuthContextProvider: FC<AuthContextProviderProps> = ({ children }) => {
+  const [loading] = useState(false);
+
+  const signUp = async (data: CreateNewUser) => {
+    try {
+      const functions = getFunctions();
+      const createUser = httpsCallable<CreateNewUser, User>(
+        functions,
+        Callable.CreateUser
+      );
+      const result = await createUser(data);
+      const { jwtToken } = result.data;
+
+      const auth = getAuth();
+      await signInWithCustomToken(auth, jwtToken);
+    } catch (error) {
+      console.error("Error during sign up and sign in:", error);
+    }
+  };
+
+  return (
+    <AuthContext.Provider value={{ signUp, loading }}>
+      {children}
+    </AuthContext.Provider>
+  );
+};

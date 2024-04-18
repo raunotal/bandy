@@ -37,6 +37,7 @@ import Members from "./pages/Members";
 import Bands from "./pages/Bands";
 import AddEvent from "./pages/AddEvent";
 import React from 'react';
+import withAuth from './hoc/withAuth';
 
 /* Theme variables */
 // import "./theme/variables.css";
@@ -76,4 +77,4 @@ const App: React.FC = () => (
   </IonApp>
 );
 
-export default App;
+export default withAuth(App);
