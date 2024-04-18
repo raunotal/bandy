@@ -1,5 +1,4 @@
 import { IonContent, IonHeader, IonPage, IonTitle } from '@ionic/react'
-import React from 'react'
 
 const SignUp = () => {
   return (

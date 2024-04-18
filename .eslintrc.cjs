@@ -1,18 +1,33 @@
 module.exports = {
   root: true,
   env: {
-    node: true,
+    browser: true,
+    es2021: true,
+    node: true
   },
   parser: '@typescript-eslint/parser',  // Specifies the ESLint parser
   parserOptions: {
-    ecmaVersion: 2020,
+    ecmaVersion: 2021,
     sourceType: 'module',
-    project: './tsconfig.json'
+    project: './tsconfig.json',
+    ecmaFeatures: {
+      jsx: true
+    }
   },
   plugins: ['@typescript-eslint'],
-  extends: ['plugin:react/recommended', 'eslint:recommended'],
+  extends: [
+    "eslint:recommended",
+    "plugin:react/recommended",
+    "plugin:react-hooks/recommended",
+  ],
   rules: {
-    'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
-    'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
+    'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
+    'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
+    "react/react-in-jsx-scope": "off"
   },
+  // settings: {
+  //   react: {
+  //     version: 'detect'
+  //   }
+  // }
 };

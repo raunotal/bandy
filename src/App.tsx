@@ -1,13 +1,14 @@
-import { Redirect, Route } from "react-router-dom";
+import { Route } from "react-router-dom";
 import {
+  IonApp,
   IonIcon,
   IonLabel,
   IonRouterOutlet,
   IonTabBar,
   IonTabButton,
   IonTabs,
-  setupIonicReact,
-} from "@ionic/react";
+  setupIonicReact
+} from '@ionic/react';
 import { IonReactRouter } from "@ionic/react-router";
 import {
   addCircleOutline,
@@ -35,6 +36,7 @@ import "@ionic/react/css/display.css";
 import Members from "./pages/Members";
 import Bands from "./pages/Bands";
 import AddEvent from "./pages/AddEvent";
+import React from 'react';
 
 /* Theme variables */
 // import "./theme/variables.css";

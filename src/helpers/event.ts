@@ -1,4 +1,4 @@
-import { EventStatus } from "../../types/event";
+import { EventStatus } from '../../enums/event';
 
 export const getTitleTypeFromEventStatus = (status: EventStatus) => {
   switch (status) {
@@ -25,8 +25,7 @@ export const extractDate = (dateTimeString: string): string => {
 };
 
 export const extractTime = (dateTimeString: string): string => {
-  const timePart = dateTimeString.split("T")[1];
-  return timePart;
+  return dateTimeString.split("T")[1];
 };
 
 export const getEventStatus = (status: string): EventStatus => {

@@ -1,3 +1,3 @@
-interface Band {
+export interface Band {
   name: string;
 }
