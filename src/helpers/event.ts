@@ -1,4 +1,4 @@
-import { EventStatus } from "../types/event";
+import { EventStatus } from "../../types/event";
 
 export const getTitleTypeFromEventStatus = (status: EventStatus) => {
   switch (status) {

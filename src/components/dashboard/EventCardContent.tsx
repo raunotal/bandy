@@ -1,6 +1,6 @@
 import { IonButton, IonCardContent, IonContent, IonIcon, IonItem, IonText } from "@ionic/react";
 import React from "react";
-import { Event } from "../../types/event";
+import { Event } from "../../../types/event";
 import { extractDate, extractTime } from "../../helpers/event";
 import { arrowForwardOutline } from "ionicons/icons";
 

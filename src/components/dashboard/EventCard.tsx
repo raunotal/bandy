@@ -2,7 +2,7 @@ import { IonCard, IonCardHeader, IonCardSubtitle, IonCardTitle } from "@ionic/re
 import React from "react";
 import EventCardContent from "./EventCardContent";
 import EventCardSubtitle from "./EventCardSubtitle";
-import { Event } from "../../types/event";
+import { Event } from "../../../types/event";
 
 const EventCard = (props: Event) => {
   const { location, venue } = props;

@@ -1,8 +1,4 @@
-export enum EventStatus {
-  Confirmed = 'confirmed',
-  Pending = 'pending',
-  Cancelled = 'cancelled',
-}
+import { EventStatus } from '../enums/event';
 
 export interface Event {
   startDateTime: string;
