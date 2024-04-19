@@ -1,19 +1,15 @@
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
-import { FieldValue } from 'firebase-admin/firestore';
 import { CreateNewUser, CreateNewUserResponse } from '../../../types/authentication';
 import { UserRoles } from '../../../enums/roles';
-import { CallableRequest, onCall } from 'firebase-functions/lib/v2/providers/https';
 import { Collection } from '../../../enums/collection';
+import { logger } from 'firebase-functions';
+import { firestore } from 'firebase-admin';
+import FieldValue = firestore.FieldValue;
 
-// Initialize the Firebase Admin SDK
-admin.initializeApp();
-
-export const createUser = onCall(
-  async (
-    request: CallableRequest<CreateNewUser>): Promise<CreateNewUserResponse> => {
-    const data = request.data;
-    console.log('[createUser] - data', data);
+export const createUser = functions.https.onCall(
+  async (data: CreateNewUser): Promise<CreateNewUserResponse> => {
+    logger.info('[createUser] - data', data);
     const { email, password, displayName, isManager, phoneNumber, bandName } =
       data;
     const role = isManager ? UserRoles.MANAGER : UserRoles.MEMBER;
@@ -25,15 +21,15 @@ export const createUser = onCall(
         displayName,
         phoneNumber
       });
-      console.log('[createUser] - userCrated - userRecord');
+      logger.info('[createUser] - userCrated - userRecord');
 
       const { uid } = userRecord;
       await admin.auth().setCustomUserClaims(uid, { role });
-      console.log('[createUser] - customClaimsSet');
+      logger.info('[createUser] - customClaimsSet');
       await admin.auth().updateUser(uid, {
         emailVerified: true
       });
-      console.log('[createUser] - userEmailVerified');
+      logger.info('[createUser] - userEmailVerified');
 
       const usersCollection = admin
         .firestore()
@@ -42,7 +38,7 @@ export const createUser = onCall(
       await usersCollection
         .doc(uid)
         .set({ displayName, email, phoneNumber, role, bands: [] });
-      console.log('[createUser] - createUser - documentCreated');
+      logger.info('[createUser] - createUser - documentCreated');
 
       if (isManager && bandName) {
         const band = {
@@ -55,12 +51,12 @@ export const createUser = onCall(
           .collection(Collection.Bands);
 
         const { id: bandId } = await bandsCollection.add(band);
-        console.log('[createUser] - createBand - documentCreated');
+        logger.info('[createUser] - createBand - documentCreated');
 
         await usersCollection.doc(uid).update({
           bands: FieldValue.arrayUnion(bandId)
         });
-        console.log('[createUser] - add band to user bands');
+        logger.info('[createUser] - add band to user bands');
       }
 
       const jwtToken = await admin.auth().createCustomToken(uid);
@@ -69,7 +65,7 @@ export const createUser = onCall(
       };
     } catch (error) {
       // Handle and return errors
-      console.error('Error creating user:', error);
+      logger.error('Error creating user:', error);
       throw new functions.https.HttpsError(
         'internal',
         'Error creating user',
