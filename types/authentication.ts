@@ -3,6 +3,7 @@ import { Band } from './band';
 export interface AuthenticationContext {
   signUp: (data: CreateNewUser) => void;
   loading: boolean;
+  isUserLoggedIn: boolean;
 }
 
 export interface CreateNewUser {

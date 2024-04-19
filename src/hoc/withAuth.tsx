@@ -1,4 +1,3 @@
-import { useAuth } from '../context/authContext';
 import { ComponentType, FC } from 'react';
 
 interface AppAuthProps {
@@ -11,8 +10,6 @@ const withAuth = <P extends object>(
 
   // noinspection UnnecessaryLocalVariableJS
   const WithAuthComponent: FC<P> = (props) => {
-    const auth = useAuth();
-    console.log(auth.loading);
     return (
       <WrappedComponent {...{ ...props, user: { name: 'John Smith' } }} />
     );

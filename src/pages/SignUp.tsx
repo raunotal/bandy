@@ -1,15 +1,11 @@
-import { IonContent, IonHeader, IonPage, IonTitle } from '@ionic/react'
+import GeneralLayout from '../components/layout/GeneralLayout';
 
 const SignUp = () => {
   return (
-    <IonPage>
-      <IonContent>
-        <IonHeader>
-          <IonTitle>Sign Up</IonTitle>
-        </IonHeader>
-      </IonContent>
-    </IonPage>
-  )
-}
+    <GeneralLayout title="Sign Up">
+      Dummy content
+    </GeneralLayout>
+  );
+};
 
-export default SignUp
+export default SignUp;

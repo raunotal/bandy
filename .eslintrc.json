@@ -35,8 +35,5 @@
     "react": {
       "version": "18"
     }
-  },
-  "ignorePatterns": [
-    "functions/lib/**"
-  ]
+  }
 }

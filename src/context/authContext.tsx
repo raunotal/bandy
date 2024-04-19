@@ -9,7 +9,8 @@ const defaultContext: AuthenticationContext = {
   signUp: async () => {
     throw new Error('Should be implemented in AuthContextProvider.');
   },
-  loading: true
+  loading: true,
+  isUserLoggedIn: false,
 };
 
 const AuthContext = createContext<AuthenticationContext>(defaultContext);
@@ -17,7 +18,8 @@ const AuthContext = createContext<AuthenticationContext>(defaultContext);
 export const useAuth = () => useContext(AuthContext);
 
 export const AuthContextProvider: FC<AuthContextProviderProps> = ({ children }) => {
-  const [loading] = useState(false);
+  const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const signUp = async (data: CreateNewUser) => {
     try {
@@ -31,13 +33,17 @@ export const AuthContextProvider: FC<AuthContextProviderProps> = ({ children }) 
 
       const auth = getAuth();
       await signInWithCustomToken(auth, jwtToken);
+      setIsUserLoggedIn(true);
     } catch (error) {
-      console.error("Error during sign up and sign in:", error);
+      // eslint-disable-next-line no-console
+      console.error("Error during sign up or sign in:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <AuthContext.Provider value={{ signUp, loading }}>
+    <AuthContext.Provider value={{ signUp, loading, isUserLoggedIn }}>
       {children}
     </AuthContext.Provider>
   );
