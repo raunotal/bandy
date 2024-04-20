@@ -30,7 +30,6 @@ export const addEventToBand = functions.https.onCall(
 
       return { statusCode: 301, message: "Event added", event: { eventId } };
     } catch (error) {
-      // Handle and return errors
       logger.error("Error adding event:", error);
       throw new functions.https.HttpsError(
         "internal",
