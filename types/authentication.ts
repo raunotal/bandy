@@ -1,3 +1,5 @@
+import { Band } from './band';
+
 export interface AuthenticationContext {
   user: User | null;
   loading: boolean;
@@ -24,5 +26,5 @@ export interface UserBasicInfo {
 
 export interface User extends UserBasicInfo {
   jwtToken: string;
-  band: string;
+  band: Band | null;
 }

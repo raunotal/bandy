@@ -18,11 +18,11 @@ export const addMemberToBand = functions.https.onCall(
   ): Promise<CloudFunctionResponse> => {
     logger.log('[addMemberToBand]', data);
     try {
-      const { bandId, userId, name, instrument } = data;
+      const { bandId, uid, name, instrument } = data;
 
       await firestore
         .collection(Collection.Users)
-        .doc(userId)
+        .doc(uid)
         .update({
           band: bandId
         });
@@ -32,7 +32,7 @@ export const addMemberToBand = functions.https.onCall(
         .collection(Collection.Bands)
         .doc(bandId)
         .update({
-          members: FieldValue.arrayUnion({ name, instrument, userId })
+          members: FieldValue.arrayUnion({ name, instrument, uid })
         });
       logger.log('[addMemberToBand] - add entry to bandMembers collection');
 

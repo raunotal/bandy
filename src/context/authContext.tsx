@@ -5,7 +5,7 @@ import { AuthenticationContext, CreateNewUser, User } from '../../types/authenti
 import { Callable } from '../../enums/callable';
 import { getFunctions, httpsCallable } from 'firebase/functions';
 import { auth } from '../../config/firebaseConfig';
-import { Member } from '../../types/member';
+import { Band } from '../../types/band';
 
 const defaultContext: AuthenticationContext = {
   user: null,
@@ -36,12 +36,12 @@ export const AuthContextProvider: FC<AuthContextProviderProps> = ({ children }) 
         const jwtToken = await user.getIdTokenResult();
 
         const functions = getFunctions();
-        const getUserProfileByIdFunction = httpsCallable<{ uid: string }, Member>(
+        const getUserByIdFunction = httpsCallable<{ uid: string }, Band | null>(
           functions,
-          Callable.GetUserProfileById
+          Callable.getUserBandDataById
         );
-        const result = await getUserProfileByIdFunction({ uid });
-        const band = result.data.band;
+        const result = await getUserByIdFunction({ uid });
+        const band = result.data;
 
         setUser({
           uid,

@@ -69,7 +69,6 @@ export const createUser = functions.https.onCall(
         jwtToken
       };
     } catch (error) {
-      // Handle and return errors
       logger.error('Error creating user:', error);
       throw new functions.https.HttpsError(
         'internal',
