@@ -29,9 +29,11 @@ export const addMemberToBand = functions.https.onCall(
       logger.log('[addMemberToBand] - add band to user bands');
 
       await firestore
-        .collection(Collection.BandMembers)
-        .doc()
-        .set({ bandId, userId, instrument, name });
+        .collection(Collection.Bands)
+        .doc(bandId)
+        .update({
+          members: FieldValue.arrayUnion({ name, instrument, userId })
+        });
       logger.log('[addMemberToBand] - add entry to bandMembers collection');
 
       return { statusCode: 301, message: 'Member added to band' };

@@ -6,6 +6,7 @@ import { IonButton, IonCol, IonGrid, IonRow } from '@ionic/react';
 import { Member } from '../../types/member';
 import { Callable } from '../../enums/callable';
 import { getFunctions, httpsCallable } from 'firebase/functions';
+import { UserRoles } from '../../enums/roles';
 
 interface MemberDetailsProps
   extends RouteComponentProps<{
@@ -43,7 +44,26 @@ const MemberDetails: FC<MemberDetailsProps> = ({ match }) => {
     return <GeneralLayout title="Members">Member not found</GeneralLayout>;
   }
 
-  const canAddToBand = !member.bands?.some(bandId => !user?.bands?.includes(bandId));
+  const addMemberToBandHandler = async () => {
+    const functions = getFunctions();
+    const addMemberToBandFunction = httpsCallable(
+      functions,
+      Callable.AddMemberToBand
+    );
+    await addMemberToBandFunction({
+      bandId: user!.bands[0],
+      userId: member.uid,
+      name: member.name,
+      instrument: member.instrument
+    });
+  };
+
+  console.log(user);
+  console.log(member);
+
+  const canAddToBand = !member.bands?.some(
+      bandId => user?.bands?.includes(bandId))
+    && user?.role === UserRoles.MANAGER;
 
   return (
     <GeneralLayout>
@@ -60,7 +80,7 @@ const MemberDetails: FC<MemberDetailsProps> = ({ match }) => {
         <IonRow>
           <IonCol>
             {canAddToBand && (
-              <IonButton>
+              <IonButton onClick={addMemberToBandHandler}>
                 Add to band
               </IonButton>
             )}

@@ -48,7 +48,8 @@ export const createUser = functions.https.onCall(
       if (isManager && bandName) {
         const band = {
           name: bandName,
-          events: []
+          events: [],
+          members: []
         };
 
         const bandsCollection = admin
