@@ -4,8 +4,6 @@ import { CreateNewUser } from '../../../types/authentication';
 import { UserRoles } from '../../../enums/roles';
 import { Collection } from '../../../enums/collection';
 import { logger } from 'firebase-functions';
-import { firestore } from 'firebase-admin';
-import FieldValue = firestore.FieldValue;
 import { CreateNewUserResponse } from '../../../types/response';
 
 if (!admin.apps.length) {
@@ -43,10 +41,10 @@ export const createUser = functions.https.onCall(
 
       await usersCollection
         .doc(uid)
-        .set({ name, email, instrument, role, bands: [], image: IMAGE_URL });
+        .set({ name, email, instrument, role, image: IMAGE_URL });
       logger.info('[createUser] - createUser - documentCreated');
 
-      if (isManager && bandName) {
+      if (isManager) {
         const band = {
           name: bandName,
           events: [],
@@ -60,8 +58,8 @@ export const createUser = functions.https.onCall(
         const { id: bandId } = await bandsCollection.add(band);
         logger.info('[createUser] - createBand - documentCreated');
 
-        await usersCollection.doc(uid).update({
-          bands: FieldValue.arrayUnion(bandId)
+        await usersCollection.doc(uid).set({
+          band: bandId
         });
         logger.info('[createUser] - add band to user bands');
       }
