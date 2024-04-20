@@ -23,7 +23,7 @@ export const addMemberToBand = functions.https.onCall(
       await firestore
         .collection(Collection.Users)
         .doc(userId)
-        .set({
+        .update({
           band: bandId
         });
       logger.log('[addMemberToBand] - add band to user bands');

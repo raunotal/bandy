@@ -41,7 +41,7 @@ export const AuthContextProvider: FC<AuthContextProviderProps> = ({ children }) 
           Callable.GetUserProfileById
         );
         const result = await getUserProfileByIdFunction({ uid });
-        const bands = result.data.bands || [];
+        const band = result.data.band;
 
         setUser({
           uid,
@@ -49,7 +49,7 @@ export const AuthContextProvider: FC<AuthContextProviderProps> = ({ children }) 
           name: displayName!,
           jwtToken: jwtToken.token,
           role: jwtToken.claims.role as string,
-          bands
+          band
         });
       } else {
         setUser(null);

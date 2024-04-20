@@ -14,6 +14,7 @@ import React, { FormEvent, useState } from 'react';
 import { useAuth } from '../../context/authContext';
 import { CreateNewUser } from '../../../types/authentication';
 import { useHistory } from 'react-router-dom';
+import { faker } from '@faker-js/faker';
 
 interface SignUpProps {
   isOpen: boolean;
@@ -25,12 +26,12 @@ const SignUpModal = (props: SignUpProps) => {
   const history = useHistory();
   const { signUp } = useAuth();
   const [formData, setFormData] = useState<CreateNewUser>({
-    name: '',
+    name: faker.person.firstName(),
     email: '',
     password: '',
     isManager: false,
-    bandName: '',
-    instrument: ''
+    bandName: faker.vehicle.manufacturer(),
+    instrument: faker.hacker.noun()
   });
 
   const { isManager } = formData;
@@ -53,7 +54,13 @@ const SignUpModal = (props: SignUpProps) => {
 
   const signUpUser = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    await signUp(formData);
+    await signUp({
+      ...formData,
+      email: faker.internet.email(),
+      password: '123123',
+      isManager: formData.isManager
+    });
+    // await signUp(formData);
     history.push('/events');
   };
 
@@ -87,6 +94,7 @@ const SignUpModal = (props: SignUpProps) => {
                       name="name"
                       label="Name"
                       labelPlacement="floating"
+                      value={formData.name}
                       onIonInput={onInputChange}
                       required
                     />
@@ -121,6 +129,7 @@ const SignUpModal = (props: SignUpProps) => {
                         name="instrument"
                         label="Instrument"
                         labelPlacement="floating"
+                        value={formData.instrument}
                         onIonInput={onInputChange}
                         required
                       />
@@ -131,6 +140,7 @@ const SignUpModal = (props: SignUpProps) => {
                         name="bandName"
                         label="Band name"
                         labelPlacement="floating"
+                        value={formData.bandName}
                         onIonInput={onInputChange}
                         required
                       />

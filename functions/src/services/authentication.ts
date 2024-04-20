@@ -58,7 +58,7 @@ export const createUser = functions.https.onCall(
         const { id: bandId } = await bandsCollection.add(band);
         logger.info('[createUser] - createBand - documentCreated');
 
-        await usersCollection.doc(uid).set({
+        await usersCollection.doc(uid).update({
           band: bandId
         });
         logger.info('[createUser] - add band to user bands');
