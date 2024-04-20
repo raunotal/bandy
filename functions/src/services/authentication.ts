@@ -10,7 +10,7 @@ import FieldValue = firestore.FieldValue;
 export const createUser = functions.https.onCall(
   async (data: CreateNewUser): Promise<CreateNewUserResponse> => {
     logger.info('[createUser] - data', data);
-    const { email, password, displayName, isManager, phoneNumber, bandName } =
+    const { email, password, displayName, isManager, bandName } =
       data;
     const role = isManager ? UserRoles.MANAGER : UserRoles.MEMBER;
 
@@ -19,7 +19,6 @@ export const createUser = functions.https.onCall(
         email,
         password,
         displayName,
-        phoneNumber
       });
       logger.info('[createUser] - userCrated - userRecord');
 
@@ -37,7 +36,7 @@ export const createUser = functions.https.onCall(
 
       await usersCollection
         .doc(uid)
-        .set({ displayName, email, phoneNumber, role, bands: [] });
+        .set({ displayName, email, role, bands: [] });
       logger.info('[createUser] - createUser - documentCreated');
 
       if (isManager && bandName) {

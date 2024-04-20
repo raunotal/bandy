@@ -63,7 +63,7 @@ const AddEvent = () => {
             ))}
           </IonSelect>
         </IonItem>
-        <IonButton expand="block" onClick={() => console.log('Event Saved:', { message: 'Dummy save event' })}>
+        <IonButton expand="block">
           Save Event
         </IonButton>
       </IonList>
