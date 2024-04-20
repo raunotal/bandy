@@ -7,6 +7,10 @@ import { logger } from 'firebase-functions';
 import { firestore } from 'firebase-admin';
 import FieldValue = firestore.FieldValue;
 
+if (!admin.apps.length) {
+  admin.initializeApp();
+}
+
 export const createUser = functions.https.onCall(
   async (data: CreateNewUser): Promise<CreateNewUserResponse> => {
     logger.info('[createUser] - data', data);

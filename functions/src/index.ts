@@ -1,9 +1,4 @@
-import * as admin from 'firebase-admin';
 import { createUser } from './services/authentication';
+import { addMemberToBand } from './services/band';
 
-
-if (!admin.apps.length) {
-  admin.initializeApp();
-}
-
-export { createUser };
+export { createUser, addMemberToBand };
