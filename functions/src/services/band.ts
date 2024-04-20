@@ -4,7 +4,7 @@ import { logger } from 'firebase-functions';
 import { CloudFunctionResponse } from '../../../types/response';
 import { Collection } from '../../../enums/collection';
 import { FieldValue } from 'firebase-admin/firestore';
-import { AddToMemberToBandDTO } from '../../../types/band';
+import { AddToMemberToBandDTO } from '../../../types/dto/band';
 
 const firestore = admin.firestore();
 
@@ -18,7 +18,7 @@ export const addMemberToBand = functions.https.onCall(
   ): Promise<CloudFunctionResponse> => {
     logger.log('[addMemberToBand]', data);
     try {
-      const { bandId, userId } = data;
+      const { bandId, userId, name, instrument } = data;
 
       await firestore
         .collection(Collection.Users)
@@ -27,6 +27,12 @@ export const addMemberToBand = functions.https.onCall(
           bands: FieldValue.arrayUnion(bandId)
         });
       logger.log('[addMemberToBand] - add band to user bands');
+
+      await firestore
+        .collection(Collection.BandMembers)
+        .doc()
+        .set({ bandId, userId, instrument, name });
+      logger.log('[addMemberToBand] - add entry to bandMembers collection');
 
       return { statusCode: 301, message: 'Member added to band' };
     } catch (error) {
