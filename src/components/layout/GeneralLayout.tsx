@@ -1,4 +1,4 @@
-import { IonContent, IonHeader, IonMenu, IonPage, IonTitle, IonToolbar } from '@ionic/react';
+import { IonButtons, IonContent, IonHeader, IonMenu, IonMenuButton, IonPage, IonTitle, IonToolbar } from '@ionic/react';
 import { ReactNode } from 'react';
 import withAuth from '../../hoc/withAuth';
 
@@ -13,17 +13,18 @@ const GeneralLayout = (props: GeneralLayoutProps) => {
 
   return (
     <>
-      <IonMenu contentId="main-content">
+      <IonMenu contentId="main-content" type="push">
         <IonContent className="ion-padding">This is the menu content.</IonContent>
       </IonMenu>
       <IonPage id="main-content">
-        {title && (
-          <IonHeader>
-            <IonToolbar>
-              <IonTitle>{title}</IonTitle>
-            </IonToolbar>
-          </IonHeader>
-        )}
+        <IonHeader>
+          <IonToolbar>
+            <IonButtons slot="start">
+              <IonMenuButton></IonMenuButton>
+            </IonButtons>
+            <IonTitle>{title}</IonTitle>
+          </IonToolbar>
+        </IonHeader>
         <IonContent className={contentClassName}>
           {children}
         </IonContent>
