@@ -1,9 +1,10 @@
 import { Band } from './band';
 
 export interface AuthenticationContext {
-  signUp: (data: CreateNewUser) => Promise<void>;
-  loading: boolean;
   isUserLoggedIn: boolean;
+  loading: boolean;
+  signUp: (data: CreateNewUser) => Promise<void>;
+  login: (email: string, password: string) => Promise<void>;
 }
 
 export interface CreateNewUser {

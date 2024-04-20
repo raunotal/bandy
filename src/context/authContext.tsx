@@ -1,5 +1,5 @@
 import { createContext, FC, useContext, useEffect, useState } from 'react';
-import { onAuthStateChanged, signInWithCustomToken } from 'firebase/auth';
+import { onAuthStateChanged, signInWithCustomToken, signInWithEmailAndPassword } from 'firebase/auth';
 import { AuthContextProviderProps } from '../../types/context/authContext';
 import { AuthenticationContext, CreateNewUser, User } from '../../types/authentication';
 import { Callable } from '../../enums/callable';
@@ -8,6 +8,9 @@ import { auth } from '../config/firebaseConfig';
 
 const defaultContext: AuthenticationContext = {
   signUp: async () => {
+    throw new Error('Should be implemented in AuthContextProvider.');
+  },
+  login: async () => {
     throw new Error('Should be implemented in AuthContextProvider.');
   },
   loading: true,
@@ -50,8 +53,12 @@ export const AuthContextProvider: FC<AuthContextProviderProps> = ({ children }) 
     }
   };
 
+  const login = async (email: string, password: string) => {
+    await signInWithEmailAndPassword(auth, email, password);
+  };
+
   return (
-    <AuthContext.Provider value={{ signUp, loading, isUserLoggedIn }}>
+    <AuthContext.Provider value={{ signUp, login, loading, isUserLoggedIn }}>
       {children}
     </AuthContext.Provider>
   );
