@@ -12,19 +12,19 @@ const withAuth = <P extends object>(
 ): FC<P> => {
   // noinspection UnnecessaryLocalVariableJS
   const WithAuthComponent: FC<P> = (props) => {
-    const { loading, isUserLoggedIn } = useAuth();
+    const { loading, user } = useAuth();
     const history = useHistory();
     const location = useLocation();
 
     useEffect(() => {
-      if (!loading && !isUserLoggedIn) {
+      if (!loading && !user?.uid) {
         history.push('/login');
       }
 
-      if (location.pathname === '/login' && isUserLoggedIn) {
+      if (location.pathname === '/login' && user?.uid) {
         history.push('/events');
       }
-    }, [history, isUserLoggedIn, loading, location.pathname]);
+    }, [history, user?.uid, loading, location.pathname]);
 
     if (loading) {
       return (

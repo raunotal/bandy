@@ -21,7 +21,7 @@ interface GeneralLayoutProps {
 
 const GeneralLayout = (props: GeneralLayoutProps) => {
   const { title, children, contentClassName } = props;
-  const { logOut, isUserLoggedIn } = useAuth();
+  const { logOut, user } = useAuth();
 
   return (
     <>
@@ -35,7 +35,7 @@ const GeneralLayout = (props: GeneralLayoutProps) => {
         </IonContent>
       </IonMenu>
       <IonPage id="main-content">
-        {isUserLoggedIn && (
+        {user && (
           <IonHeader>
             <IonToolbar>
               <IonButtons slot="start">

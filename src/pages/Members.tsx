@@ -23,8 +23,6 @@ const Members = () => {
     fetchMembers().then(members => setMembers(members));
   }, []);
 
-  console.log("Members page - members", members);
-
   return (
     <GeneralLayout title="Members">
       {members.map((member) => <MemberCard key={member.uid} {...member} />)}
