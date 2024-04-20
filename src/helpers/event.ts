@@ -1,12 +1,12 @@
-import { EventStatus } from "../types/event";
+import { EventStatus } from '../../enums/event';
 
 export const getTitleTypeFromEventStatus = (status: EventStatus) => {
   switch (status) {
-    case "confirmed":
+    case EventStatus.Confirmed:
       return "success";
-    case "pending":
+    case EventStatus.Pending:
       return "warning";
-    case "cancelled":
+    case EventStatus.Cancelled:
       return "danger";
     default:
       return "medium";
@@ -25,19 +25,5 @@ export const extractDate = (dateTimeString: string): string => {
 };
 
 export const extractTime = (dateTimeString: string): string => {
-  const timePart = dateTimeString.split("T")[1];
-  return timePart;
-};
-
-export const getEventStatus = (status: string): EventStatus => {
-  switch (status) {
-    case "confirmed":
-      return EventStatus.Confirmed;
-    case "pending":
-      return EventStatus.Pending;
-    case "cancelled":
-      return EventStatus.Cancelled;
-    default:
-      return EventStatus.Pending;
-  }
+  return dateTimeString.split("T")[1];
 };

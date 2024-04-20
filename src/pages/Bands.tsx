@@ -1,26 +1,24 @@
-import { IonPage, IonContent } from '@ionic/react';
 import BandCard from '../components/bands/BandCard';
+import GeneralLayout from '../components/layout/GeneralLayout';
 
 const DUMMY_DATA = [
   {
-    name: "Heldene Aeg"
+    name: 'Heldene Aeg'
   },
   {
-    name: "Terminal Frost"
+    name: 'Terminal Frost'
   },
   {
-    name: "The Beatles"
-  },
-]
+    name: 'The Beatles'
+  }
+];
 
 const Bands = () => {
   return (
-    <IonPage>
-      <IonContent>
-        {DUMMY_DATA.map((band, index) => <BandCard key={index} {...band} />)}
-      </IonContent>
-    </IonPage>
-  )
-}
+    <GeneralLayout>
+      {DUMMY_DATA.map((band, index) => <BandCard key={index} {...band} />)}
+    </GeneralLayout>
+  );
+};
 
-export default Bands
+export default Bands;

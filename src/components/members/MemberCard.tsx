@@ -1,4 +1,5 @@
 import { IonCard, IonCardHeader, IonCardTitle, IonCardSubtitle } from '@ionic/react'
+import { Member } from '../../../types/member';
 
 const MemberCard = (props: Member) => {
   const { name, instrument, image } = props

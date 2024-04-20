@@ -1,4 +1,5 @@
 import { IonCard, IonCardHeader, IonCardTitle } from '@ionic/react'
+import { Band } from '../../../types/band';
 
 const BandCard = (props: Band) => {
   const { name } = props
@@ -6,9 +7,9 @@ const BandCard = (props: Band) => {
     <IonCard>
       <IonCardHeader>
         <div style={{ display: 'flex', justifyContent: "space-between" }}>
-          <div>
-            <IonCardTitle>{name}</IonCardTitle>
-          </div>
+          <IonCardTitle style={{ display: "flex", alignItems: "center" }}>
+            {name}
+          </IonCardTitle>
           <div
             style={{
               display: "flex",

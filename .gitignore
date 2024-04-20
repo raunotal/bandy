@@ -30,6 +30,10 @@ yarn-error.log*
 
 # Firebase
 .firebaserc
-firebase.json
 firestore.rules
 firestore.indexes.json
+firebase-debug.log
+firestore-debug.log
+ui-debug.log
+emulator-data/
+firebase-export-*/
