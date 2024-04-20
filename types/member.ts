@@ -3,4 +3,5 @@ export interface Member {
   name: string;
   instrument: string;
   image: string;
+  bands?: string[];
 }

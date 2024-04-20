@@ -31,11 +31,41 @@ export const getUsersWithMemberRole = functions.https.onCall(
       logger.log('[getBandMembers] - usersSnapshot/Docs/members');
       return { members };
     } catch (error) {
-      // Handle and return errors
       logger.error('Error fetching members:', error);
       throw new functions.https.HttpsError(
         'internal',
         'Error fetching members',
+        error
+      );
+    }
+  }
+);
+
+export const getUserProfileById = functions.https.onCall(
+  async (data: { uid: string }): Promise<Member | null> => {
+    logger.log("[getBandMember]");
+
+    try {
+      const { uid } = data;
+      const docRef = firestore.collection(Collection.Users).doc(uid);
+      logger.log("[getBandMember] - docRef");
+      const doc = await docRef.get();
+      logger.log("[getBandMember] - doc");
+
+      if (doc.exists) {
+        const data = doc.data();
+        return {
+          uid: doc.id,
+          ...data,
+        } as Member;
+      } else {
+        return null;
+      }
+    } catch (error) {
+      logger.error("Error fetching bandMember:", error);
+      throw new functions.https.HttpsError(
+        "internal",
+        "Error fetching bandMember",
         error
       );
     }

@@ -1,5 +1,5 @@
 export interface AuthenticationContext {
-  user: UserBasicInfo | null;
+  user: User | null;
   loading: boolean;
   signUp: (data: CreateNewUser) => Promise<void>;
   login: (email: string, password: string) => Promise<void>;
@@ -28,4 +28,5 @@ export interface UserBasicInfo {
 
 export interface User extends UserBasicInfo {
   jwtToken: string;
+  bands: string[];
 }

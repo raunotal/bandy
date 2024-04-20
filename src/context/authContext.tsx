@@ -5,6 +5,7 @@ import { AuthenticationContext, CreateNewUser, User } from '../../types/authenti
 import { Callable } from '../../enums/callable';
 import { getFunctions, httpsCallable } from 'firebase/functions';
 import { auth } from '../../config/firebaseConfig';
+import { Member } from '../../types/member';
 
 const defaultContext: AuthenticationContext = {
   user: null,
@@ -17,7 +18,7 @@ const defaultContext: AuthenticationContext = {
   },
   logOut: async () => {
     throw new Error('Should be implemented in AuthContextProvider.');
-  },
+  }
 };
 
 const AuthContext = createContext<AuthenticationContext>(defaultContext);
@@ -33,12 +34,22 @@ export const AuthContextProvider: FC<AuthContextProviderProps> = ({ children }) 
       if (user) {
         const { uid, email, displayName } = user;
         const jwtToken = await user.getIdTokenResult();
+
+        const functions = getFunctions();
+        const getUserProfileByIdFunction = httpsCallable<{ uid: string }, Member>(
+          functions,
+          Callable.GetUserProfileById
+        );
+        const result = await getUserProfileByIdFunction({ uid });
+        const bands = result.data.bands || [];
+
         setUser({
           uid,
           email: email!,
           name: displayName!,
           jwtToken: jwtToken.token,
           role: jwtToken.claims.role as string,
+          bands
         });
       } else {
         setUser(null);
