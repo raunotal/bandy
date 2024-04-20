@@ -5,6 +5,7 @@ export interface AuthenticationContext {
   loading: boolean;
   signUp: (data: CreateNewUser) => Promise<void>;
   login: (email: string, password: string) => Promise<void>;
+  logOut: () => Promise<void>;
 }
 
 export interface CreateNewUser {

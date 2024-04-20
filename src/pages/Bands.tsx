@@ -15,7 +15,7 @@ const DUMMY_DATA = [
 
 const Bands = () => {
   return (
-    <GeneralLayout>
+    <GeneralLayout title="Bands">
       {DUMMY_DATA.map((band, index) => <BandCard key={index} {...band} />)}
     </GeneralLayout>
   );
