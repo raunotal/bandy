@@ -5,9 +5,11 @@ import { Member } from '../../types/member';
 import { getFunctions, httpsCallable } from 'firebase/functions';
 import { Callable } from '../../enums/callable';
 import { GetUsersWithMemberRoleDTO } from '../../types/dto/user';
+import { useAuth } from '../context/authContext';
 
 const Members = () => {
   const [members, setMembers] = useState<Member[]>([]);
+  const { user } = useAuth();
 
   useEffect(() => {
     const fetchMembers = async () => {
@@ -23,9 +25,11 @@ const Members = () => {
     fetchMembers().then(members => setMembers(members));
   }, []);
 
+  const membersToShow = members.filter(member => member.uid !== user?.uid);
+
   return (
     <GeneralLayout title="Members">
-      {members.map((member) => <MemberCard key={member.uid} {...member} />)}
+      {membersToShow.map((member) => <MemberCard key={member.uid} {...member} />)}
     </GeneralLayout>
   );
 };

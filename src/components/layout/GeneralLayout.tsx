@@ -29,6 +29,9 @@ const GeneralLayout = (props: GeneralLayoutProps) => {
         <IonContent color="light">
           <IonList inset>
             <IonItem>
+              <IonText>Hello, {user?.name}!</IonText>
+            </IonItem>
+            <IonItem>
               <IonText onClick={logOut}>Log out</IonText>
             </IonItem>
           </IonList>
