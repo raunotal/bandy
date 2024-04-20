@@ -58,9 +58,6 @@ const MemberDetails: FC<MemberDetailsProps> = ({ match }) => {
     });
   };
 
-  console.log(user);
-  console.log(member);
-
   const canAddToBand = !member.bands?.some(
       bandId => user?.bands?.includes(bandId))
     && user?.role === UserRoles.MANAGER;
