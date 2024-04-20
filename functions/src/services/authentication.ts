@@ -1,11 +1,12 @@
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
-import { CreateNewUser, CreateNewUserResponse } from '../../../types/authentication';
+import { CreateNewUser } from '../../../types/authentication';
 import { UserRoles } from '../../../enums/roles';
 import { Collection } from '../../../enums/collection';
 import { logger } from 'firebase-functions';
 import { firestore } from 'firebase-admin';
 import FieldValue = firestore.FieldValue;
+import { CreateNewUserResponse } from '../../../types/response';
 
 if (!admin.apps.length) {
   admin.initializeApp();

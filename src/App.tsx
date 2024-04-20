@@ -34,7 +34,6 @@ import '@ionic/react/css/text-transformation.css';
 import '@ionic/react/css/flex-utils.css';
 import '@ionic/react/css/display.css';
 import Members from './pages/Members';
-import Bands from './pages/Bands';
 import AddEvent from './pages/AddEvent';
 import React from 'react';
 import Login from './pages/Login';
@@ -55,17 +54,12 @@ const App: React.FC = () => {
           <Route path="/">
             <IonTabs>
               <IonRouterOutlet>
-                <Route exact path="/bands" component={Bands} />
                 <Route exact path="/events" component={Events} />
                 <Route exact path="/members" component={Members} />
                 <Route exact path="/members/:id" component={MemberDetails} />
                 <Route exact path="/add-event" component={AddEvent} />
               </IonRouterOutlet>
               <IonTabBar slot="bottom">
-                <IonTabButton tab="bands" href="/bands">
-                  <IonIcon aria-hidden="true" icon={radioOutline} />
-                  <IonLabel>Bands</IonLabel>
-                </IonTabButton>
                 <IonTabButton tab="dashboard" href="/events">
                   <IonIcon icon={calendarOutline} />
                   <IonLabel>Gigs</IonLabel>
