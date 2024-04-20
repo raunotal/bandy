@@ -1,7 +1,7 @@
 import { Band } from './band';
 
 export interface AuthenticationContext {
-  signUp: (data: CreateNewUser) => void;
+  signUp: (data: CreateNewUser) => Promise<void>;
   loading: boolean;
   isUserLoggedIn: boolean;
 }

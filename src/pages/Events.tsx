@@ -56,7 +56,7 @@ const DUMMY_DATA: Event[] = [
   }
 ];
 
-const Dashboard = () => {
+const Events = () => {
   return (
     <GeneralLayout>
       {DUMMY_DATA.map((event, index) =>
@@ -66,4 +66,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default Events;

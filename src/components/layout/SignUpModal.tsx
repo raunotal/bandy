@@ -13,6 +13,7 @@ import {
 import React, { FormEvent, useState } from 'react';
 import { useAuth } from '../../context/authContext';
 import { CreateNewUser } from '../../../types/authentication';
+import { useHistory } from 'react-router-dom';
 
 interface SignUpProps {
   isOpen: boolean;
@@ -21,6 +22,7 @@ interface SignUpProps {
 
 const SignUpModal = (props: SignUpProps) => {
   const { isOpen, toggleModal } = props;
+  const history = useHistory();
   const { signUp } = useAuth();
   const [formData, setFormData] = useState<CreateNewUser>({
     displayName: '',
@@ -48,9 +50,10 @@ const SignUpModal = (props: SignUpProps) => {
     }));
   };
 
-  const signUpUser = (event: FormEvent<HTMLFormElement>) => {
+  const signUpUser = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    signUp(formData);
+    await signUp(formData);
+    history.push('/events');
   };
 
   return (

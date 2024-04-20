@@ -1,6 +1,6 @@
 import { ComponentType, FC, useEffect } from 'react';
 import { useAuth } from '../context/authContext';
-import { useHistory } from 'react-router';
+import { useHistory, useLocation } from 'react-router-dom';
 import { IonContent, IonLoading, IonPage } from '@ionic/react';
 
 interface AppAuthProps {
@@ -14,12 +14,17 @@ const withAuth = <P extends object>(
   const WithAuthComponent: FC<P> = (props) => {
     const { loading, isUserLoggedIn } = useAuth();
     const history = useHistory();
+    const location = useLocation();
 
     useEffect(() => {
       if (!loading && !isUserLoggedIn) {
         history.push('/login');
       }
-    }, [history, isUserLoggedIn, loading]);
+
+      if (location.pathname === '/login' && isUserLoggedIn) {
+        history.push('/events');
+      }
+    }, [history, isUserLoggedIn, loading, location.pathname]);
 
     if (loading) {
       return (

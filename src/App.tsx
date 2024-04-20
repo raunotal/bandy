@@ -16,7 +16,7 @@ import {
   peopleOutline,
   radioOutline
 } from 'ionicons/icons';
-import Dashboard from './pages/Dashboard';
+import Events from './pages/Events';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -52,18 +52,17 @@ const App: React.FC = () => {
         <IonTabs>
           <IonRouterOutlet>
             <Route path="/login" render={() => <Login />} />
-            <Route exact path="/dashboard" render={() => <Dashboard />} />
             <Route exact path="/bands" render={() => <Bands />} />
+            <Route exact path="/events" render={() => <Events />} />
             <Route exact path="/members" render={() => <Members />} />
             <Route exact path="/add-event" render={() => <AddEvent />} />
-            {/*<Redirect from={"/"} to={"/dashboard"} />*/}
           </IonRouterOutlet>
           <IonTabBar slot="bottom">
             <IonTabButton tab="bands" href="/bands">
               <IonIcon aria-hidden="true" icon={radioOutline} />
               <IonLabel>Bands</IonLabel>
             </IonTabButton>
-            <IonTabButton tab="dashboard" href="/dashboard">
+            <IonTabButton tab="dashboard" href="/events">
               <IonIcon icon={calendarOutline} />
               <IonLabel>Gigs</IonLabel>
             </IonTabButton>
