@@ -1,10 +1,17 @@
 import { IonCard, IonCardHeader, IonCardTitle, IonCardSubtitle } from '@ionic/react'
 import { Member } from '../../../types/member';
+import { useHistory } from 'react-router-dom';
 
 const MemberCard = (props: Member) => {
-  const { name, instrument, image } = props
+  const { uid, name, instrument, image } = props
+  const history = useHistory();
+
+  const handleMemberClick = () => {
+    history.push(`/members/${uid}`);
+  }
+
   return (
-    <IonCard>
+    <IonCard onClick={handleMemberClick}>
       <IonCardHeader>
         <div style={{ display: 'flex', justifyContent: "space-between" }}>
           <div>

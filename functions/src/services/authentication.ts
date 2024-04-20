@@ -7,10 +7,16 @@ import { logger } from 'firebase-functions';
 import { firestore } from 'firebase-admin';
 import FieldValue = firestore.FieldValue;
 
+if (!admin.apps.length) {
+  admin.initializeApp();
+}
+
+const IMAGE_URL = 'https://beforeigosolutions.com/wp-content/uploads/2021/12/dummy-profile-pic-300x300-1.png';
+
 export const createUser = functions.https.onCall(
   async (data: CreateNewUser): Promise<CreateNewUserResponse> => {
     logger.info('[createUser] - data', data);
-    const { email, password, displayName, isManager, bandName } =
+    const { email, password, name, instrument, isManager, bandName } =
       data;
     const role = isManager ? UserRoles.MANAGER : UserRoles.MEMBER;
 
@@ -18,7 +24,7 @@ export const createUser = functions.https.onCall(
       const userRecord = await admin.auth().createUser({
         email,
         password,
-        displayName,
+        displayName: name
       });
       logger.info('[createUser] - userCrated - userRecord');
 
@@ -36,13 +42,14 @@ export const createUser = functions.https.onCall(
 
       await usersCollection
         .doc(uid)
-        .set({ displayName, email, role, bands: [] });
+        .set({ name, email, instrument, role, bands: [], image: IMAGE_URL });
       logger.info('[createUser] - createUser - documentCreated');
 
       if (isManager && bandName) {
         const band = {
           name: bandName,
-          events: []
+          events: [],
+          members: []
         };
 
         const bandsCollection = admin

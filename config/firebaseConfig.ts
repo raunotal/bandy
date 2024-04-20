@@ -22,4 +22,4 @@ connectAuthEmulator(auth, "http://localhost:8001");
 connectFunctionsEmulator(functions, "localhost", 8002);
 connectFirestoreEmulator(firestore, "localhost", 8003);
 
-export { auth, functions, app, firestore };
+export { auth, app, functions };

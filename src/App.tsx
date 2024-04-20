@@ -39,6 +39,7 @@ import AddEvent from './pages/AddEvent';
 import React from 'react';
 import Login from './pages/Login';
 import './styles.css';
+import MemberDetails from './pages/MemberDetails';
 
 /* Theme variables */
 // import "./theme/variables.css";
@@ -54,10 +55,11 @@ const App: React.FC = () => {
           <Route path="/">
             <IonTabs>
               <IonRouterOutlet>
-                <Route exact path="/bands" render={() => <Bands />} />
-                <Route exact path="/events" render={() => <Events />} />
-                <Route exact path="/members" render={() => <Members />} />
-                <Route exact path="/add-event" render={() => <AddEvent />} />
+                <Route exact path="/bands" component={Bands} />
+                <Route exact path="/events" component={Events} />
+                <Route exact path="/members" component={Members} />
+                <Route exact path="/members/:id" component={MemberDetails} />
+                <Route exact path="/add-event" component={AddEvent} />
               </IonRouterOutlet>
               <IonTabBar slot="bottom">
                 <IonTabButton tab="bands" href="/bands">

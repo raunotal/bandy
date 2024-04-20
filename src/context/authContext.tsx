@@ -5,8 +5,11 @@ import { AuthenticationContext, CreateNewUser, User } from '../../types/authenti
 import { Callable } from '../../enums/callable';
 import { getFunctions, httpsCallable } from 'firebase/functions';
 import { auth } from '../../config/firebaseConfig';
+import { Member } from '../../types/member';
 
 const defaultContext: AuthenticationContext = {
+  user: null,
+  loading: true,
   signUp: async () => {
     throw new Error('Should be implemented in AuthContextProvider.');
   },
@@ -15,9 +18,7 @@ const defaultContext: AuthenticationContext = {
   },
   logOut: async () => {
     throw new Error('Should be implemented in AuthContextProvider.');
-  },
-  loading: true,
-  isUserLoggedIn: false
+  }
 };
 
 const AuthContext = createContext<AuthenticationContext>(defaultContext);
@@ -25,15 +26,36 @@ const AuthContext = createContext<AuthenticationContext>(defaultContext);
 export const useAuth = () => useContext(AuthContext);
 
 export const AuthContextProvider: FC<AuthContextProviderProps> = ({ children }) => {
-  const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setIsUserLoggedIn(!!user);
+    return onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        const { uid, email, displayName } = user;
+        const jwtToken = await user.getIdTokenResult();
+
+        const functions = getFunctions();
+        const getUserProfileByIdFunction = httpsCallable<{ uid: string }, Member>(
+          functions,
+          Callable.GetUserProfileById
+        );
+        const result = await getUserProfileByIdFunction({ uid });
+        const bands = result.data.bands || [];
+
+        setUser({
+          uid,
+          email: email!,
+          name: displayName!,
+          jwtToken: jwtToken.token,
+          role: jwtToken.claims.role as string,
+          bands
+        });
+      } else {
+        setUser(null);
+      }
       setLoading(false);
     });
-    return () => unsubscribe();
   }, []);
 
   const signUp = async (data: CreateNewUser) => {
@@ -47,7 +69,6 @@ export const AuthContextProvider: FC<AuthContextProviderProps> = ({ children }) 
       const { jwtToken } = result.data;
 
       await signInWithCustomToken(auth, jwtToken);
-      setIsUserLoggedIn(true);
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error('Error during sign up or sign in:', error);
@@ -63,7 +84,7 @@ export const AuthContextProvider: FC<AuthContextProviderProps> = ({ children }) 
   const logOut = async () => await signOut(auth);
 
   return (
-    <AuthContext.Provider value={{ logOut, signUp, login, loading, isUserLoggedIn }}>
+    <AuthContext.Provider value={{ logOut, signUp, login, loading, user }}>
       {children}
     </AuthContext.Provider>
   );

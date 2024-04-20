@@ -25,11 +25,12 @@ const SignUpModal = (props: SignUpProps) => {
   const history = useHistory();
   const { signUp } = useAuth();
   const [formData, setFormData] = useState<CreateNewUser>({
-    displayName: '',
+    name: '',
     email: '',
     password: '',
     isManager: false,
-    bandName: ''
+    bandName: '',
+    instrument: ''
   });
 
   const { isManager } = formData;
@@ -83,7 +84,7 @@ const SignUpModal = (props: SignUpProps) => {
                   </IonItem>
                   <IonItem className="ion-margin-top">
                     <IonInput
-                      name="displayName"
+                      name="name"
                       label="Name"
                       labelPlacement="floating"
                       onIonInput={onInputChange}

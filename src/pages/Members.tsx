@@ -1,85 +1,35 @@
 import MemberCard from '../components/members/MemberCard';
 import GeneralLayout from '../components/layout/GeneralLayout';
-
-const DUMMY_DATA = [
-  {
-    name: 'John Doe',
-    instrument: 'guitar',
-    image:
-      'https://beforeigosolutions.com/wp-content/uploads/2021/12/dummy-profile-pic-300x300-1.png'
-  },
-  {
-    name: 'Jane Doe',
-    instrument: 'drums',
-    image:
-      'https://beforeigosolutions.com/wp-content/uploads/2021/12/dummy-profile-pic-300x300-1.png'
-  },
-  {
-    name: 'John Smith',
-    instrument: 'bass',
-    image:
-      'https://beforeigosolutions.com/wp-content/uploads/2021/12/dummy-profile-pic-300x300-1.png'
-  },
-  {
-    name: 'Jane Smith',
-    instrument: 'vocals',
-    image:
-      'https://beforeigosolutions.com/wp-content/uploads/2021/12/dummy-profile-pic-300x300-1.png'
-  },
-  {
-    name: 'John Doe',
-    instrument: 'guitar',
-    image:
-      'https://beforeigosolutions.com/wp-content/uploads/2021/12/dummy-profile-pic-300x300-1.png'
-  },
-  {
-    name: 'Jane Doe',
-    instrument: 'drums',
-    image:
-      'https://beforeigosolutions.com/wp-content/uploads/2021/12/dummy-profile-pic-300x300-1.png'
-  },
-  {
-    name: 'John Smith',
-    instrument: 'bass',
-    image:
-      'https://beforeigosolutions.com/wp-content/uploads/2021/12/dummy-profile-pic-300x300-1.png'
-  },
-  {
-    name: 'Jane Smith',
-    instrument: 'vocals',
-    image:
-      'https://beforeigosolutions.com/wp-content/uploads/2021/12/dummy-profile-pic-300x300-1.png'
-  },
-  {
-    name: 'John Doe',
-    instrument: 'guitar',
-    image:
-      'https://beforeigosolutions.com/wp-content/uploads/2021/12/dummy-profile-pic-300x300-1.png'
-  },
-  {
-    name: 'Jane Doe',
-    instrument: 'drums',
-    image:
-      'https://beforeigosolutions.com/wp-content/uploads/2021/12/dummy-profile-pic-300x300-1.png'
-  },
-  {
-    name: 'John Smith',
-    instrument: 'bass',
-    image:
-      'https://beforeigosolutions.com/wp-content/uploads/2021/12/dummy-profile-pic-300x300-1.png'
-  },
-  {
-    name: 'Jane Smith',
-    instrument: 'vocals',
-    image:
-      'https://beforeigosolutions.com/wp-content/uploads/2021/12/dummy-profile-pic-300x300-1.png'
-  }
-];
+import { useEffect, useState } from 'react';
+import { Member } from '../../types/member';
+import { getFunctions, httpsCallable } from 'firebase/functions';
+import { Callable } from '../../enums/callable';
+import { GetUsersWithMemberRoleDTO } from '../../types/dto/user';
+import { useAuth } from '../context/authContext';
 
 const Members = () => {
+  const [members, setMembers] = useState<Member[]>([]);
+  const { user } = useAuth();
+
+  useEffect(() => {
+    const fetchMembers = async () => {
+      const functions = getFunctions();
+      const getBandMembersFunction = httpsCallable<object, GetUsersWithMemberRoleDTO>(
+        functions,
+        Callable.GetUsersWithMemberRole
+      );
+      const result = await getBandMembersFunction();
+      return result.data.members;
+    };
+
+    fetchMembers().then(members => setMembers(members));
+  }, []);
+
+  const membersToShow = members.filter(member => member.uid !== user?.uid);
+
   return (
     <GeneralLayout title="Members">
-      {DUMMY_DATA.map((member, index) => <MemberCard key={index} {...member} />)}
+      {membersToShow.map((member) => <MemberCard key={member.uid} {...member} />)}
     </GeneralLayout>
   );
 };

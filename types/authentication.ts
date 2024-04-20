@@ -1,7 +1,5 @@
-import { Band } from './band';
-
 export interface AuthenticationContext {
-  isUserLoggedIn: boolean;
+  user: User | null;
   loading: boolean;
   signUp: (data: CreateNewUser) => Promise<void>;
   login: (email: string, password: string) => Promise<void>;
@@ -9,7 +7,7 @@ export interface AuthenticationContext {
 }
 
 export interface CreateNewUser {
-  displayName: string;
+  name: string;
   email: string;
   password: string;
   instrument?: string;
@@ -24,12 +22,11 @@ export interface CreateNewUserResponse {
 export interface UserBasicInfo {
   uid: string;
   email: string;
-  displayName: string;
+  name: string;
   role: string;
-  phoneNumber: string;
-  bands: Band[];
 }
 
 export interface User extends UserBasicInfo {
   jwtToken: string;
+  bands: string[];
 }
