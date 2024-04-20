@@ -1,4 +1,5 @@
 import {
+  IonBackButton,
   IonButtons,
   IonContent,
   IonHeader, IonItem,
@@ -25,7 +26,7 @@ const GeneralLayout = (props: GeneralLayoutProps) => {
 
   return (
     <>
-      <IonMenu contentId="main-content" type="push" side="start">
+      <IonMenu contentId="main-content" type="push" side="end">
         <IonContent color="light">
           <IonList inset>
             <IonItem>
@@ -42,9 +43,12 @@ const GeneralLayout = (props: GeneralLayoutProps) => {
           <IonHeader>
             <IonToolbar>
               <IonButtons slot="start">
-                <IonMenuButton></IonMenuButton>
+                <IonBackButton></IonBackButton>
               </IonButtons>
               <IonTitle>{title}</IonTitle>
+              <IonButtons slot="end">
+                <IonMenuButton></IonMenuButton>
+              </IonButtons>
             </IonToolbar>
           </IonHeader>
         )}
