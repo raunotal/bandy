@@ -2,9 +2,17 @@ import GeneralLayout from '../components/layout/GeneralLayout';
 import { IonButton, IonCardTitle, IonCol, IonGrid, IonInput, IonItem, IonRow } from '@ionic/react';
 import React, { useState } from 'react';
 import SignUpModal from '../components/layout/SignUpModal';
+import { useAuth } from '../context/authContext';
 
 const Login = () => {
+  const { login } = useAuth();
   const [isSignUpModalOpen, setIsSignUpModalOpen] = useState(false);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const handleLogin = async () => {
+    await login(email, password);
+  };
 
   const toggleSignUpModal = () => {
     setIsSignUpModalOpen(prevState => !prevState);
@@ -17,12 +25,14 @@ const Login = () => {
           <IonCol>
             <IonCardTitle className="ion-text-center ion-margin-bottom">Bandy</IonCardTitle>
             <IonItem>
-              <IonInput label="Email" labelPlacement="floating"></IonInput>
+              <IonInput label="Email" labelPlacement="floating"
+                        onIonChange={(e) => setEmail(e.detail.value!)} />
             </IonItem>
             <IonItem>
-              <IonInput label="Password" labelPlacement="floating" type="password"></IonInput>
+              <IonInput label="Password" labelPlacement="floating" type="password"
+                        onIonChange={(e) => setPassword(e.detail.value!)} />
             </IonItem>
-            <IonButton className="ion-margin-top" expand="block">
+            <IonButton className="ion-margin-top" expand="block" onClick={handleLogin}>
               Log In
             </IonButton>
             <IonButton expand="block" onClick={toggleSignUpModal}>

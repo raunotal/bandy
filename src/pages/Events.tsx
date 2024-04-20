@@ -58,7 +58,7 @@ const DUMMY_DATA: Event[] = [
 
 const Events = () => {
   return (
-    <GeneralLayout>
+    <GeneralLayout title="Events">
       {DUMMY_DATA.map((event, index) =>
         <EventCard {...event} key={index} />
       )}

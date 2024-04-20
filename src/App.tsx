@@ -1,4 +1,4 @@
-import { Route } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 import {
   IonApp,
   IonIcon,
@@ -49,33 +49,37 @@ const App: React.FC = () => {
   return (
     <IonApp>
       <IonReactRouter>
-        <IonTabs>
-          <IonRouterOutlet>
-            <Route path="/login" render={() => <Login />} />
-            <Route exact path="/bands" render={() => <Bands />} />
-            <Route exact path="/events" render={() => <Events />} />
-            <Route exact path="/members" render={() => <Members />} />
-            <Route exact path="/add-event" render={() => <AddEvent />} />
-          </IonRouterOutlet>
-          <IonTabBar slot="bottom">
-            <IonTabButton tab="bands" href="/bands">
-              <IonIcon aria-hidden="true" icon={radioOutline} />
-              <IonLabel>Bands</IonLabel>
-            </IonTabButton>
-            <IonTabButton tab="dashboard" href="/events">
-              <IonIcon icon={calendarOutline} />
-              <IonLabel>Gigs</IonLabel>
-            </IonTabButton>
-            <IonTabButton tab="members" href="/members">
-              <IonIcon icon={peopleOutline} />
-              <IonLabel>Members</IonLabel>
-            </IonTabButton>
-            <IonTabButton tab="add-event" href="/add-event">
-              <IonIcon aria-hidden="true" icon={addCircleOutline} />
-              <IonLabel>Add Event</IonLabel>
-            </IonTabButton>
-          </IonTabBar>
-        </IonTabs>
+        <Switch>
+          <Route exact path="/login" render={() => <Login />} />
+          <Route path="/">
+            <IonTabs>
+              <IonRouterOutlet>
+                <Route exact path="/bands" render={() => <Bands />} />
+                <Route exact path="/events" render={() => <Events />} />
+                <Route exact path="/members" render={() => <Members />} />
+                <Route exact path="/add-event" render={() => <AddEvent />} />
+              </IonRouterOutlet>
+              <IonTabBar slot="bottom">
+                <IonTabButton tab="bands" href="/bands">
+                  <IonIcon aria-hidden="true" icon={radioOutline} />
+                  <IonLabel>Bands</IonLabel>
+                </IonTabButton>
+                <IonTabButton tab="dashboard" href="/events">
+                  <IonIcon icon={calendarOutline} />
+                  <IonLabel>Gigs</IonLabel>
+                </IonTabButton>
+                <IonTabButton tab="members" href="/members">
+                  <IonIcon icon={peopleOutline} />
+                  <IonLabel>Members</IonLabel>
+                </IonTabButton>
+                <IonTabButton tab="add-event" href="/add-event">
+                  <IonIcon aria-hidden="true" icon={addCircleOutline} />
+                  <IonLabel>Add Event</IonLabel>
+                </IonTabButton>
+              </IonTabBar>
+            </IonTabs>
+          </Route>
+        </Switch>
       </IonReactRouter>
     </IonApp>
   );

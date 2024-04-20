@@ -78,7 +78,7 @@ const DUMMY_DATA = [
 
 const Members = () => {
   return (
-    <GeneralLayout>
+    <GeneralLayout title="Members">
       {DUMMY_DATA.map((member, index) => <MemberCard key={index} {...member} />)}
     </GeneralLayout>
   );
