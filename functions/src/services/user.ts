@@ -4,6 +4,7 @@ import { Collection } from '../../../enums/collection';
 import { Member } from '../../../types/member';
 import { logger } from 'firebase-functions';
 import { UserRoles } from '../../../enums/roles';
+import { GetUsersWithMemberRoleDTO } from '../../../types/dto/user';
 
 if (!admin.apps.length) {
   admin.initializeApp();
@@ -12,7 +13,7 @@ if (!admin.apps.length) {
 const firestore = admin.firestore();
 
 export const getUsersWithMemberRole = functions.https.onCall(
-  async (): Promise<Member[]> => {
+  async (): Promise<GetUsersWithMemberRoleDTO> => {
     logger.log('[getBandMembers]');
 
     try {
@@ -28,7 +29,7 @@ export const getUsersWithMemberRole = functions.https.onCall(
         instrument: doc.data().instrument
       })) as Member[];
       logger.log('[getBandMembers] - usersSnapshot/Docs/members');
-      return { ...members };
+      return { members };
     } catch (error) {
       // Handle and return errors
       logger.error('Error fetching members:', error);
