@@ -14,7 +14,7 @@ if (!admin.apps.length) {
 export const createUser = functions.https.onCall(
   async (data: CreateNewUser): Promise<CreateNewUserResponse> => {
     logger.info('[createUser] - data', data);
-    const { email, password, displayName, isManager, bandName } =
+    const { email, password, name, isManager, bandName } =
       data;
     const role = isManager ? UserRoles.MANAGER : UserRoles.MEMBER;
 
@@ -22,7 +22,7 @@ export const createUser = functions.https.onCall(
       const userRecord = await admin.auth().createUser({
         email,
         password,
-        displayName,
+        displayName: name,
       });
       logger.info('[createUser] - userCrated - userRecord');
 
@@ -40,7 +40,7 @@ export const createUser = functions.https.onCall(
 
       await usersCollection
         .doc(uid)
-        .set({ displayName, email, role, bands: [] });
+        .set({ name, email, role, bands: [] });
       logger.info('[createUser] - createUser - documentCreated');
 
       if (isManager && bandName) {

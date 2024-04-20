@@ -25,7 +25,7 @@ const SignUpModal = (props: SignUpProps) => {
   const history = useHistory();
   const { signUp } = useAuth();
   const [formData, setFormData] = useState<CreateNewUser>({
-    displayName: '',
+    name: '',
     email: '',
     password: '',
     isManager: false,

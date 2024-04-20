@@ -9,7 +9,7 @@ export interface AuthenticationContext {
 }
 
 export interface CreateNewUser {
-  displayName: string;
+  name: string;
   email: string;
   password: string;
   instrument?: string;
@@ -24,7 +24,7 @@ export interface CreateNewUserResponse {
 export interface UserBasicInfo {
   uid: string;
   email: string;
-  displayName: string;
+  name: string;
   role: string;
   phoneNumber: string;
   bands: Band[];
