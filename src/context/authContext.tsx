@@ -4,7 +4,7 @@ import { AuthContextProviderProps } from '../../types/context/authContext';
 import { AuthenticationContext, CreateNewUser, User } from '../../types/authentication';
 import { Callable } from '../../enums/callable';
 import { getFunctions, httpsCallable } from 'firebase/functions';
-import { auth } from '../config/firebaseConfig';
+import { auth } from '../../config/firebaseConfig';
 
 const defaultContext: AuthenticationContext = {
   signUp: async () => {

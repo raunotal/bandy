@@ -17,12 +17,12 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 // const analytics = getAnalytics(app);
-const db = getFirestore();
+const firestore = getFirestore();
 const functions = getFunctions(app);
 const auth = getAuth();
 
 connectAuthEmulator(auth, "http://localhost:8001");
 connectFunctionsEmulator(functions, "localhost", 8002);
-connectFirestoreEmulator(db, "localhost", 8003);
+connectFirestoreEmulator(firestore, "localhost", 8003);
 
-export { auth, functions, app, db };
+export { auth, functions, app, firestore };
