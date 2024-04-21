@@ -2,8 +2,8 @@ import {
   IonItem,
   IonSelect,
   IonSelectOption,
+  SelectChangeEventDetail,
 } from '@ionic/react';
-import React from 'react';
 import { Status } from '../../../enums/event';
 
 interface EventDetailsEventStatusProps {
@@ -12,13 +12,21 @@ interface EventDetailsEventStatusProps {
 }
 
 const EventDetailsEventStatus = (props: EventDetailsEventStatusProps) => {
-  const { value } = props;
+  const { value, onChange } = props;
+
+  const handleEventStatusChange = (
+    event: CustomEvent<SelectChangeEventDetail<Status>>
+  ) => {
+    onChange(event.detail.value);
+  };
+
   return (
     <IonItem>
       <IonSelect
         name='status'
         label='Event status'
         labelPlacement='floating'
+        onIonChange={handleEventStatusChange}
         value={value}
       >
         <IonSelectOption value={Status.Confirmed}>Confirmed</IonSelectOption>
