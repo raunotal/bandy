@@ -13,8 +13,8 @@ export const getTitleTypeFromEventStatus = (status: EventStatus) => {
   }
 };
 
-export const extractDate = (dateTimeString: string): string => {
-  const date = new Date(dateTimeString);
+export const extractDate = (dateTime: Date): string => {
+  const date = new Date(dateTime);
   const options: Intl.DateTimeFormatOptions = {
     year: "numeric",
     month: "2-digit",
@@ -24,6 +24,7 @@ export const extractDate = (dateTimeString: string): string => {
   return formatter.format(date);
 };
 
-export const extractTime = (dateTimeString: string): string => {
-  return dateTimeString.split("T")[1];
+export const extractTime = (dateTime: Date): string => {
+  const date = new Date(dateTime);
+  return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 };
