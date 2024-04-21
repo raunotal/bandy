@@ -1,7 +1,6 @@
 import { ComponentType, FC, useEffect } from 'react';
 import { useAuth } from '../context/authContext';
 import { useHistory, useLocation } from 'react-router-dom';
-import { IonContent, IonLoading, IonPage } from '@ionic/react';
 
 interface AppAuthProps {
   user: { name: string };
@@ -25,19 +24,6 @@ const withAuth = <P extends object>(
         history.push('/events');
       }
     }, [history, user?.uid, loading, location.pathname]);
-
-    if (loading) {
-      return (
-        <IonPage>
-          <IonContent>
-            <IonLoading
-              isOpen={true}
-              duration={3000}
-            />
-          </IonContent>
-        </IonPage>
-      );
-    }
 
     return (
       <WrappedComponent {...{ ...props, user: { name: 'John Smith' } }} />

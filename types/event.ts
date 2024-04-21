@@ -1,10 +1,10 @@
-import { EventStatus } from '../enums/event';
+import { EventStatus, EventType } from '../enums/event';
 
 export interface Event {
-  startDateTime: string;
-  endDateTime: string;
-  eventType: string;
+  startDateTime: Date;
+  endDateTime: Date;
+  eventType: EventType;
   location: string;
   venue: string;
-  status: EventStatus;
+  status?: EventStatus;
 }

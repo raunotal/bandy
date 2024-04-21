@@ -3,5 +3,6 @@ export enum Callable {
   GetUsersWithMemberRole = "getUsersWithMemberRole",
   GetUserProfileById = "getUserProfileById",
   AddMemberToBand = "addMemberToBand",
-  getUserBandDataById = "getUserBandDataById"
+  getUserBandDataById = "getUserBandDataById",
+  AddEventToBand = "addEventToBand",
 }

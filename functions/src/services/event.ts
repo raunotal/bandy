@@ -1,10 +1,10 @@
-import * as functions from "firebase-functions";
+import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
 import { AddEventDTO } from '../../../types/dto/event';
 import { AddEventResponse } from '../../../types/response';
 import { logger } from 'firebase-functions';
 import { Collection } from '../../../enums/collection';
-import { FieldValue } from 'firebase-admin/lib/firestore';
+import { FieldValue } from 'firebase-admin/firestore';
 
 const firestore = admin.firestore();
 
@@ -14,7 +14,7 @@ if (!admin.apps.length) {
 
 export const addEventToBand = functions.https.onCall(
   async (data: AddEventDTO): Promise<AddEventResponse> => {
-    logger.log("[addEventToBand]", data);
+    logger.log('[addEventToBand]', data);
 
     try {
       const { bandId, ...eventData } = data;
@@ -24,16 +24,16 @@ export const addEventToBand = functions.https.onCall(
         .collection(Collection.Bands)
         .doc(bandId)
         .update({
-          events: FieldValue.arrayUnion({ eventId, ...eventData})
+          events: FieldValue.arrayUnion({ eventId, ...eventData })
         });
-      logger.log("[addEventToBand] - add event to band events");
+      logger.log('[addEventToBand] - add event to band events');
 
-      return { statusCode: 301, message: "Event added", event: { eventId } };
+      return { statusCode: 301, message: 'Event added', event: { eventId } };
     } catch (error) {
-      logger.error("Error adding event:", error);
+      logger.error('Error adding event:', error);
       throw new functions.https.HttpsError(
-        "internal",
-        "Error adding event",
+        'internal',
+        'Error adding event',
         error
       );
     }

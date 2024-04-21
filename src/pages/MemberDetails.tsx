@@ -50,14 +50,14 @@ const MemberDetails: FC<MemberDetailsProps> = ({ match }) => {
       Callable.AddMemberToBand
     );
     await addMemberToBandFunction({
-      bandId: user!.band.uid,
+      bandId: user!.band!.uid,
       uid: member.uid,
       name: member.name,
       instrument: member.instrument
     });
     setMember(prevState => ({
         ...prevState!,
-        band: user!.band.uid!
+        band: user!.band!.uid!
       })
     );
   };

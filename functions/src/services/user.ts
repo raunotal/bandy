@@ -20,7 +20,7 @@ export const getUsersWithMemberRole = functions.https.onCall(
     try {
       const usersSnapshot = await firestore
         .collection(Collection.Users)
-        .where('role', '==', UserRoles.MEMBER)
+        .where('role', '==', UserRoles.Member)
         .get();
       logger.log('[getBandMembers] - usersSnapshot');
 

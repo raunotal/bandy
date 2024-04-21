@@ -17,7 +17,7 @@ export const createUser = functions.https.onCall(
     logger.info('[createUser] - data', data);
     const { email, password, name, instrument, isManager, bandName } =
       data;
-    const role = isManager ? UserRoles.MANAGER : UserRoles.MEMBER;
+    const role = isManager ? UserRoles.Manager : UserRoles.Member;
 
     try {
       const userRecord = await admin.auth().createUser({

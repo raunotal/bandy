@@ -1,9 +1,9 @@
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
 import { logger } from 'firebase-functions';
+import { FieldValue } from 'firebase-admin/firestore';
 import { CloudFunctionResponse } from '../../../types/response';
 import { Collection } from '../../../enums/collection';
-import { FieldValue } from 'firebase-admin/firestore';
 import { AddToMemberToBandDTO } from '../../../types/dto/band';
 
 const firestore = admin.firestore();

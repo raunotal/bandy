@@ -1,8 +1,8 @@
 import { Route, Switch } from 'react-router-dom';
 import {
-  IonApp,
+  IonApp, IonContent,
   IonIcon,
-  IonLabel,
+  IonLabel, IonLoading, IonPage,
   IonRouterOutlet,
   IonTabBar,
   IonTabButton,
@@ -39,6 +39,8 @@ import React from 'react';
 import Login from './pages/Login';
 import './styles.css';
 import MemberDetails from './pages/MemberDetails';
+import { useAuth } from './context/authContext';
+import { UserRoles } from '../enums/roles';
 
 /* Theme variables */
 // import "./theme/variables.css";
@@ -46,6 +48,22 @@ import MemberDetails from './pages/MemberDetails';
 setupIonicReact();
 
 const App: React.FC = () => {
+  const { user, loading } = useAuth();
+  const isManager = user?.role === UserRoles.Manager;
+
+  if (loading) {
+    return (
+      <IonPage>
+        <IonContent>
+          <IonLoading
+            isOpen={true}
+            duration={3000}
+          />
+        </IonContent>
+      </IonPage>
+    );
+  }
+
   return (
     <IonApp>
       <IonReactRouter>
@@ -68,10 +86,12 @@ const App: React.FC = () => {
                   <IonIcon icon={peopleOutline} />
                   <IonLabel>Members</IonLabel>
                 </IonTabButton>
-                <IonTabButton tab="add-event" href="/add-event">
-                  <IonIcon aria-hidden="true" icon={addCircleOutline} />
-                  <IonLabel>Add Event</IonLabel>
-                </IonTabButton>
+                {isManager && (
+                  <IonTabButton tab="add-event" href="/add-event">
+                    <IonIcon aria-hidden="true" icon={addCircleOutline} />
+                    <IonLabel>Add Event</IonLabel>
+                  </IonTabButton>
+                )}
               </IonTabBar>
             </IonTabs>
           </Route>
