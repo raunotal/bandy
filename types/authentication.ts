@@ -1,14 +1,6 @@
 import { Band } from './band';
 import { Event } from './event';
 
-export interface AuthenticationContext {
-  user: User | null;
-  loading: boolean;
-  signUp: (data: CreateNewUser) => Promise<void>;
-  login: (email: string, password: string) => Promise<void>;
-  logOut: () => Promise<void>;
-}
-
 export interface CreateNewUser {
   name: string;
   email: string;

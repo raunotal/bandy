@@ -5,16 +5,16 @@ import {
   signInWithEmailAndPassword,
   signOut,
 } from 'firebase/auth';
-import { AuthContextProviderProps } from '../../types/context/authContext';
 import {
+  AuthContextProviderProps,
   AuthenticationContext,
-  CreateNewUser,
-  User,
-} from '../../types/authentication';
+} from '../../types/context/authContext';
+import { CreateNewUser, User } from '../../types/authentication';
 import { Callable } from '../../enums/callable';
 import { getFunctions, httpsCallable } from 'firebase/functions';
 import { auth } from '../../config/firebaseConfig';
 import { UserAppDataDTO } from '../../types/dto/user';
+import { Member } from '../../types/member';
 
 const defaultContext: AuthenticationContext = {
   user: null,
@@ -26,6 +26,9 @@ const defaultContext: AuthenticationContext = {
     throw new Error('Should be implemented in AuthContextProvider.');
   },
   logOut: async () => {
+    throw new Error('Should be implemented in AuthContextProvider.');
+  },
+  addMemberToBand: () => {
     throw new Error('Should be implemented in AuthContextProvider.');
   },
 };
@@ -95,8 +98,20 @@ export const AuthContextProvider: FC<AuthContextProviderProps> = ({
 
   const logOut = async () => await signOut(auth);
 
+  const addMemberToBand = (member: Member) => {
+    setUser((prevState) => ({
+      ...prevState!,
+      band: {
+        ...prevState!.band!,
+        members: [...prevState!.band!.members, member],
+      },
+    }));
+  };
+
   return (
-    <AuthContext.Provider value={{ logOut, signUp, login, loading, user }}>
+    <AuthContext.Provider
+      value={{ logOut, signUp, login, loading, user, addMemberToBand }}
+    >
       {children}
     </AuthContext.Provider>
   );
