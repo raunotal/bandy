@@ -1,6 +1,5 @@
 import { FormEvent, useState } from 'react';
 import {
-  InputChangeEventDetail,
   IonButton,
   IonDatetime,
   IonDatetimeButton,
@@ -20,10 +19,12 @@ import { EventType } from '../../enums/event';
 import { faker } from '@faker-js/faker';
 import { getFunctions, httpsCallable } from 'firebase/functions';
 import { Callable } from '../../enums/callable';
+import { useHistory } from 'react-router-dom';
 
 const AddEvent = () => {
   const { user } = useAuth();
-  const [eventData, setEventData] = useState<AddEventDTO>({
+  const history = useHistory();
+  const [eventData] = useState<AddEventDTO>({
     bandId: user!.band!.uid!,
     startDateTime: new Date(),
     endDateTime: new Date(),
@@ -32,14 +33,14 @@ const AddEvent = () => {
     venue: faker.company.name(),
   });
 
-  const onInputChange = (event: CustomEvent<InputChangeEventDetail>) => {
-    const target = event.target as HTMLInputElement;
-    const { name, value } = target;
-    setEventData(prevState => ({
-      ...prevState,
-      [name]: value
-    }));
-  }
+  // const onInputChange = (event: CustomEvent<InputChangeEventDetail>) => {
+  //   const target = event.target as HTMLInputElement;
+  //   const { name, value } = target;
+  //   setEventData(prevState => ({
+  //     ...prevState,
+  //     [name]: value
+  //   }));
+  // }
 
   const addEventHandler = async (event: FormEvent<HTMLFormElement>) => {
       event.preventDefault();
@@ -50,17 +51,15 @@ const AddEvent = () => {
         functions,
         Callable.AddEventToBand
       );
-      const result = await addEventToBandFunction({
+      await addEventToBandFunction({
         ...eventData,
         startDateTime,
         endDateTime
       });
-      console.log(result);
+      history.push('/events');
   }
 
   const members = user?.band?.members;
-
-  console.log(eventData);
 
   return (
     <GeneralLayout title="Add Event" contentClassName="ion-padding">
