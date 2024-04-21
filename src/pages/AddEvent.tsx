@@ -34,7 +34,8 @@ const AddEvent = () => {
     eventType: EventType.Performance,
     location: faker.location.city(),
     venue: faker.company.name(),
-    managerId: "",
+    description: faker.company.catchPhrase(),
+    managerId: '',
     members: [],
   });
 
@@ -66,7 +67,7 @@ const AddEvent = () => {
     const functions = getFunctions();
     const addEventFunction = httpsCallable<AddEventForm, { event: Event }>(
       functions,
-      Callable.AddEventToBand
+      Callable.AddEvent
     );
     const response = await addEventFunction({
       ...eventData,

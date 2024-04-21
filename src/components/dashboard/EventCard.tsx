@@ -9,16 +9,21 @@ import EventCardSubtitle from './EventCardSubtitle';
 import { Event } from '../../../types/event';
 import { useHistory } from 'react-router';
 
-const EventCard = (props: Event) => {
-  const { uid, location, venue } = props;
-  const history = useHistory();
+interface EventCardProps extends Event {
+  onClick?: (uid: string) => void;
+}
 
-  const handleEventClick = () => {
-    history.push(`/events/${uid}`);
+const EventCard = (props: EventCardProps) => {
+  const { onClick, uid, location, venue } = props;
+
+  const handleEventCardClick = () => {
+    if (onClick) {
+      onClick(uid!);
+    }
   };
 
   return (
-    <IonCard onClick={handleEventClick}>
+    <IonCard onClick={handleEventCardClick}>
       <IonCardHeader>
         <IonCardSubtitle>{location}</IonCardSubtitle>
         <IonCardTitle>{venue}</IonCardTitle>
