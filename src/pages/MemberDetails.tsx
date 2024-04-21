@@ -10,8 +10,7 @@ import { getFunctions, httpsCallable } from 'firebase/functions';
 interface MemberDetailsProps
   extends RouteComponentProps<{
     id: string;
-  }> {
-}
+  }> {}
 
 const MemberDetails: FC<MemberDetailsProps> = ({ match }) => {
   const { user } = useAuth();
@@ -29,18 +28,18 @@ const MemberDetails: FC<MemberDetailsProps> = ({ match }) => {
       return result.data;
     };
 
-    fetchMember().then(member => {
+    fetchMember().then((member) => {
       setMember(member);
       setLoading(false);
     });
   }, [match.params.id]);
 
   if (loading) {
-    return <GeneralLayout title="Members">Loading...</GeneralLayout>;
+    return <GeneralLayout title='Members'>Loading...</GeneralLayout>;
   }
 
   if (!member) {
-    return <GeneralLayout title="Members">Member not found</GeneralLayout>;
+    return <GeneralLayout title='Members'>Member not found</GeneralLayout>;
   }
 
   const addMemberToBandHandler = async () => {
@@ -53,13 +52,12 @@ const MemberDetails: FC<MemberDetailsProps> = ({ match }) => {
       bandId: user!.band!.uid,
       uid: member.uid,
       name: member.name,
-      instrument: member.instrument
+      instrument: member.instrument,
     });
-    setMember(prevState => ({
-        ...prevState!,
-        band: user!.band!.uid!
-      })
-    );
+    setMember((prevState) => ({
+      ...prevState!,
+      band: user!.band!.uid!,
+    }));
   };
 
   const canAddToBand = !member.band;
@@ -73,7 +71,7 @@ const MemberDetails: FC<MemberDetailsProps> = ({ match }) => {
             <p>{member.instrument}</p>
           </IonCol>
           <IonCol>
-            <img src={member.image} alt="Member profile" />
+            <img src={member.image} alt='Member profile' />
           </IonCol>
         </IonRow>
         <IonRow>
