@@ -14,7 +14,6 @@ import {
   addCircleOutline,
   calendarOutline,
   peopleOutline,
-  radioOutline
 } from 'ionicons/icons';
 import Events from './pages/Events';
 
