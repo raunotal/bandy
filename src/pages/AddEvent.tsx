@@ -25,7 +25,7 @@ const AddEvent = () => {
   const { user } = useAuth();
   const history = useHistory();
   const [eventData] = useState<AddEventDTO>({
-    bandId: user!.band!.uid!,
+    bandId: "",
     startDateTime: new Date(),
     endDateTime: new Date(),
     eventType: EventType.Performance,
@@ -53,6 +53,7 @@ const AddEvent = () => {
       );
       await addEventToBandFunction({
         ...eventData,
+        bandId: user!.band!.uid!,
         startDateTime,
         endDateTime
       });
