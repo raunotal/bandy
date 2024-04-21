@@ -49,23 +49,23 @@ export const getUsersWithMemberRole = functions.https.onCall(
 export const getUserProfileById = functions.https.onCall(
   async (data: { uid: string }): Promise<Member | null> => {
     logger.log('[getUserProfileById]');
+    const { uid } = data;
 
     try {
-      const { uid } = data;
       const docRef = firestore.collection(Collection.Users).doc(uid);
       logger.log('[getBandMember] - docRef');
       const doc = await docRef.get();
       logger.log('[getUserProfileById] - doc');
 
-      if (doc.exists) {
-        const data = doc.data();
-        return {
-          uid: doc.id,
-          ...data,
-        } as Member;
-      } else {
+      if (!doc.exists) {
         return null;
       }
+
+      const data = doc.data();
+      return {
+        uid: doc.id,
+        ...data,
+      } as Member;
     } catch (error) {
       logger.error('Error fetching getUserProfileById:', error);
       throw new functions.https.HttpsError(
