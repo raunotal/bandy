@@ -77,7 +77,7 @@ const AddEvent = () => {
       members,
     });
     addEventToUser(response.data.event as Event);
-    history.push('/events');
+    history.push(`/events/${response.data.event.uid}`);
   };
 
   const members = user?.band?.members;

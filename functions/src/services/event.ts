@@ -19,18 +19,19 @@ export const addEvent = functions.https.onCall(
     const { members, managerId, ...eventData } = data;
     const eventRef = firestore.collection('events').doc();
     const managerRef = firestore.collection('users').doc(managerId);
+    const updatedMembers = members.map((member) => ({
+      uid: member.uid,
+      name: member.name,
+      instrument: member.instrument,
+      status: Status.Pending,
+    }));
 
     try {
       await firestore.runTransaction(async (transaction) => {
         transaction.set(eventRef, {
           ...eventData,
           status: Status.Pending,
-          members: members.map((member) => ({
-            uid: member.uid,
-            name: member.name,
-            instrument: member.instrument,
-            status: 'pending',
-          })),
+          members: updatedMembers,
         });
 
         members.forEach((member) => {
@@ -52,7 +53,7 @@ export const addEvent = functions.https.onCall(
           ...eventData,
           status: Status.Pending,
           uid: eventRef.id,
-          members,
+          members: updatedMembers,
         },
       };
     } catch (error) {
