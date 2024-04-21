@@ -34,7 +34,7 @@ const AddEvent = () => {
     eventType: EventType.Performance,
     location: faker.location.city(),
     venue: faker.company.name(),
-    managerId: user!.uid,
+    managerId: "",
     members: [],
   });
 
@@ -70,6 +70,7 @@ const AddEvent = () => {
     );
     const response = await addEventFunction({
       ...eventData,
+      managerId: user!.uid,
       startDateTime: startDateTime.toISOString(),
       endDateTime: endDateTime.toISOString(),
       members,
