@@ -1,19 +1,25 @@
-import { IonItem, IonSelect, IonSelectOption } from '@ionic/react';
+import {
+  IonItem,
+  IonSelect,
+  IonSelectOption,
+  SelectChangeEventDetail,
+} from '@ionic/react';
 import React from 'react';
 import { Status } from '../../../enums/event';
 
 interface EventDetailsUserStatusProps {
   value: Status;
   onChange: (status: Status) => void;
-  hidden?: boolean;
 }
 
 const EventDetailsUserStatus = (props: EventDetailsUserStatusProps) => {
-  const { value, hidden } = props;
+  const { value, onChange } = props;
 
-  if (hidden) {
-    return null;
-  }
+  const handleUserStatusChange = (
+    event: CustomEvent<SelectChangeEventDetail<Status>>
+  ) => {
+    onChange(event.detail.value);
+  };
 
   return (
     <IonItem>
@@ -21,6 +27,7 @@ const EventDetailsUserStatus = (props: EventDetailsUserStatusProps) => {
         name='status'
         label='Your status'
         labelPlacement='floating'
+        onIonChange={handleUserStatusChange}
         value={value}
       >
         <IonSelectOption value={Status.Confirmed}>Confirmed</IonSelectOption>
