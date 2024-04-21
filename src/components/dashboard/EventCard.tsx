@@ -7,7 +7,6 @@ import {
 import EventCardContent from './EventCardContent';
 import EventCardSubtitle from './EventCardSubtitle';
 import { Event } from '../../../types/event';
-import { useHistory } from 'react-router';
 
 interface EventCardProps extends Event {
   onClick?: (uid: string) => void;
