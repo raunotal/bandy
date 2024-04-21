@@ -1,13 +1,24 @@
-import { IonCard, IonCardHeader, IonCardSubtitle, IonCardTitle } from "@ionic/react";
-import React from "react";
-import EventCardContent from "./EventCardContent";
-import EventCardSubtitle from "./EventCardSubtitle";
-import { Event } from "../../../types/event";
+import {
+  IonCard,
+  IonCardHeader,
+  IonCardSubtitle,
+  IonCardTitle,
+} from '@ionic/react';
+import EventCardContent from './EventCardContent';
+import EventCardSubtitle from './EventCardSubtitle';
+import { Event } from '../../../types/event';
+import { useHistory } from 'react-router';
 
 const EventCard = (props: Event) => {
-  const { location, venue } = props;
+  const { uid, location, venue } = props;
+  const history = useHistory();
+
+  const handleEventClick = () => {
+    history.push(`/events/${uid}`);
+  };
+
   return (
-    <IonCard>
+    <IonCard onClick={handleEventClick}>
       <IonCardHeader>
         <IonCardSubtitle>{location}</IonCardSubtitle>
         <IonCardTitle>{venue}</IonCardTitle>

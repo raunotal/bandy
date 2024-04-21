@@ -7,10 +7,10 @@ const Events = () => {
   const { user } = useAuth();
 
   return (
-    <GeneralLayout title="Events">
-      {user?.events.map((event, index) =>
-        <EventCard {...event} key={index} />
-      )}
+    <GeneralLayout title='Events'>
+      {user?.events.map((event) => (
+        <EventCard {...event} key={event.uid} />
+      ))}
     </GeneralLayout>
   );
 };
