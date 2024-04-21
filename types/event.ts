@@ -19,4 +19,5 @@ export interface AddEventForm {
   location: string;
   venue: string;
   members: Member[];
+  managerId: string
 }

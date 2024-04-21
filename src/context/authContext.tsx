@@ -15,6 +15,7 @@ import { getFunctions, httpsCallable } from 'firebase/functions';
 import { auth } from '../../config/firebaseConfig';
 import { UserAppDataDTO } from '../../types/dto/user';
 import { Member } from '../../types/member';
+import { Event } from '../../types/event';
 
 const defaultContext: AuthenticationContext = {
   user: null,
@@ -29,6 +30,9 @@ const defaultContext: AuthenticationContext = {
     throw new Error('Should be implemented in AuthContextProvider.');
   },
   addMemberToBand: () => {
+    throw new Error('Should be implemented in AuthContextProvider.');
+  },
+  addEventToUser: () => {
     throw new Error('Should be implemented in AuthContextProvider.');
   },
 };
@@ -108,9 +112,24 @@ export const AuthContextProvider: FC<AuthContextProviderProps> = ({
     }));
   };
 
+  const addEventToUser = (event: Event) => {
+    setUser((prevState) => ({
+      ...prevState!,
+      events: [...prevState!.events!, event],
+    }));
+  };
+
   return (
     <AuthContext.Provider
-      value={{ logOut, signUp, login, loading, user, addMemberToBand }}
+      value={{
+        logOut,
+        signUp,
+        login,
+        loading,
+        user,
+        addMemberToBand,
+        addEventToUser,
+      }}
     >
       {children}
     </AuthContext.Provider>

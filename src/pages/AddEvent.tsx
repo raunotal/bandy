@@ -20,10 +20,10 @@ import { faker } from '@faker-js/faker';
 import { getFunctions, httpsCallable } from 'firebase/functions';
 import { Callable } from '../../enums/callable';
 import { useHistory } from 'react-router-dom';
-import { AddEventForm } from '../../types/event';
+import { AddEventForm, Event } from '../../types/event';
 
 const AddEvent = () => {
-  const { user } = useAuth();
+  const { user, addEventToUser } = useAuth();
   const history = useHistory();
   const [selectedMembers, setSelectedMembers] = useState(
     user?.band?.members.map((member) => member.uid) || []
@@ -34,6 +34,7 @@ const AddEvent = () => {
     eventType: EventType.Performance,
     location: faker.location.city(),
     venue: faker.company.name(),
+    managerId: user!.uid,
     members: [],
   });
 
@@ -54,24 +55,26 @@ const AddEvent = () => {
 
   const addEventHandler = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const members = user?.band?.members.filter((member) =>
-      selectedMembers.includes(member.uid)
-    );
+    const members =
+      user?.band?.members.filter((member) =>
+        selectedMembers.includes(member.uid)
+      ) || [];
     // Dummy date times
     const startDateTime = new Date();
     const endDateTime = new Date(startDateTime.getTime() + 2 * 60 * 60 * 1000);
 
     const functions = getFunctions();
-    const addEventFunction = httpsCallable(functions, Callable.AddEventToBand);
-    await addEventFunction({
+    const addEventFunction = httpsCallable<AddEventForm, { event: Event }>(
+      functions,
+      Callable.AddEventToBand
+    );
+    const response = await addEventFunction({
       ...eventData,
-      managerId: user!.uid,
-      bandId: user!.band!.uid!,
-      startDateTime,
-      endDateTime,
+      startDateTime: startDateTime.toISOString(),
+      endDateTime: endDateTime.toISOString(),
       members,
     });
-    // add event to user bands
+    addEventToUser(response.data.event as Event);
     history.push('/events');
   };
 
