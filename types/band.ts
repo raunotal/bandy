@@ -1,4 +1,5 @@
 import { Member } from './member';
+import { Event } from './event';
 
 export interface Band {
   uid?: string;

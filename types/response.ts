@@ -6,7 +6,7 @@ export interface CloudFunctionResponse {
 
 export interface AddEventResponse extends CloudFunctionResponse {
   event: {
-    eventId: string;
+    uid: string;
   };
 }
 

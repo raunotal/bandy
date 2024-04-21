@@ -18,17 +18,17 @@ export const addEventToBand = functions.https.onCall(
 
     try {
       const { bandId, ...eventData } = data;
-      const eventId = firestore.collection('dummy').doc().id;
+      const uid = firestore.collection('dummy').doc().id;
 
       await firestore
         .collection(Collection.Bands)
         .doc(bandId)
         .update({
-          events: FieldValue.arrayUnion({ eventId, ...eventData })
+          events: FieldValue.arrayUnion({ ...eventData, uid })
         });
       logger.log('[addEventToBand] - add event to band events');
 
-      return { statusCode: 301, message: 'Event added', event: { eventId } };
+      return { statusCode: 301, message: 'Event added', event: { uid } };
     } catch (error) {
       logger.error('Error adding event:', error);
       throw new functions.https.HttpsError(

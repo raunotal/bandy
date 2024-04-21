@@ -1,6 +1,7 @@
 import { EventStatus, EventType } from '../enums/event';
 
 export interface Event {
+  uid: string;
   startDateTime: Date;
   endDateTime: Date;
   eventType: EventType;
