@@ -80,15 +80,13 @@ export const getUserProfileById = functions.https.onCall(
 
 export const getUserAppDataById = functions.https.onCall(
   async (data: { userId: string }): Promise<UserAppDataDTO | null> => {
-    logger.log('[getUserAppDataById]');
+    logger.log('[getUserAppDataById] Starting function');
 
     try {
       const { userId } = data;
-      const userDoc = await firestore
-        .collection(Collection.Users)
-        .doc(userId)
-        .get();
-      logger.log('[getUserAppDataById] - userDoc');
+      const userDocRef = firestore.collection(Collection.Users).doc(userId);
+      const userDoc = await userDocRef.get();
+      logger.log('[getUserAppDataById] - Retrieved user document');
 
       if (!userDoc.exists) {
         logger.log('[getUserAppDataById] - No user found');
@@ -96,44 +94,37 @@ export const getUserAppDataById = functions.https.onCall(
       }
 
       const userData = userDoc.data() as UserDocument;
-      const bandId = userData.bandId;
-      const eventIds = userData.events || [];
-      logger.log('[getUserAppDataById] - bandId, eventIds', bandId, eventIds);
+      const { bandId, events: eventIds = [] } = userData;
+      logger.log('[getUserAppDataById] - Data:', bandId, eventIds);
 
-      const bandDoc = await firestore
-        .collection(Collection.Bands)
-        .doc(bandId)
-        .get();
-      logger.log('[getUserAppDataById] - bandDoc');
+      const band = bandId ? await fetchBandData(bandId) : null;
+      const eventsData = eventIds.length ? await fetchEventData(eventIds) : [];
 
-      const events = await Promise.all(
-        eventIds.map((eventId) =>
-          firestore.collection('Events').doc(eventId).get()
-        )
-      );
-
-      const eventsData = events.map(
-        (doc) =>
-          ({
-            uid: doc.id,
-            ...doc.data(),
-          } as Event)
-      );
-
-      return {
-        band: {
-          uid: bandDoc.id,
-          ...(bandDoc.data() as Band),
-        },
-        events: eventsData,
-      };
+      return { band, events: eventsData };
     } catch (error) {
-      logger.error('Error fetching getUserAppDataById:', error);
+      logger.error('[getUserAppDataById] - Error:', error);
       throw new functions.https.HttpsError(
         'internal',
-        'Error fetching getUserAppDataById',
+        'Error fetching user app data',
         error
       );
     }
   }
 );
+
+async function fetchBandData(bandId: string): Promise<Band | null> {
+  const bandDoc = await firestore
+    .collection(Collection.Bands)
+    .doc(bandId)
+    .get();
+  return bandDoc.exists
+    ? { uid: bandDoc.id, ...(bandDoc.data() as Band) }
+    : null;
+}
+
+async function fetchEventData(eventIds: string[]): Promise<Event[]> {
+  const eventDocs = await Promise.all(
+    eventIds.map((id) => firestore.collection('Events').doc(id).get())
+  );
+  return eventDocs.map((doc) => ({ uid: doc.id, ...(doc.data() as Event) }));
+}

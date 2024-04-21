@@ -7,6 +7,6 @@ export interface GetUsersWithMemberRoleDTO {
 }
 
 export interface UserAppDataDTO {
-  band: Band;
+  band: Band | null;
   events: Event[];
 }

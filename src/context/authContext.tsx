@@ -48,10 +48,10 @@ export const AuthContextProvider: FC<AuthContextProviderProps> = ({
 
         const functions = getFunctions();
         const getUserAppDataById = httpsCallable<
-          { uid: string },
+          { userId: string },
           UserAppDataDTO
         >(functions, Callable.GetUserAppDataById);
-        const result = await getUserAppDataById({ uid });
+        const result = await getUserAppDataById({ userId: uid });
         const { band, events } = result.data;
 
         setUser({
