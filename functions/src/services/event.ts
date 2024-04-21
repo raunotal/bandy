@@ -4,6 +4,8 @@ import { AddEventDTO } from '../../../types/dto/event';
 import { AddEventResponse } from '../../../types/response';
 import { logger } from 'firebase-functions';
 import { Status } from '../../../enums/event';
+import { Event } from '../../../types/event';
+import { Collection } from '../../../enums/collection';
 
 const firestore = admin.firestore();
 
@@ -58,6 +60,29 @@ export const addEvent = functions.https.onCall(
       throw new functions.https.HttpsError(
         'unknown',
         'Transaction failed',
+        error
+      );
+    }
+  }
+);
+
+export const updateEvent = functions.https.onCall(
+  async (event: Event): Promise<Event | null> => {
+    logger.log('[updateEvent]', event);
+    const { uid, status } = event;
+
+    try {
+      await firestore.collection(Collection.Events).doc(uid!).update({
+        status,
+      });
+      logger.log('[updateEvent] - eventRef updated');
+
+      return event;
+    } catch (error) {
+      logger.error('Error fetching updateEvent:', error);
+      throw new functions.https.HttpsError(
+        'internal',
+        'Error fetching updateEvent',
         error
       );
     }

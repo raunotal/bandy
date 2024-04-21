@@ -17,6 +17,8 @@ import EventDetailsEventStatus from '../components/event/EventDetailsEventStatus
 import { UserRoles } from '../../enums/roles';
 import EventDetailsUserStatus from '../components/event/EventDetailsUserStatus';
 import { getTitleTypeFromEventStatus } from '../helpers/event';
+import { getFunctions, httpsCallable } from 'firebase/functions';
+import { Callable } from '../../enums/callable';
 
 interface EventDetailsProps
   extends RouteComponentProps<{
@@ -24,7 +26,7 @@ interface EventDetailsProps
   }> {}
 
 const EventDetails: FC<EventDetailsProps> = ({ match }) => {
-  const { user } = useAuth();
+  const { user, updateEvent } = useAuth();
   const [event, setEvent] = useState<Event | null>(null);
   const isManager = user?.role === UserRoles.Manager;
 
@@ -39,7 +41,17 @@ const EventDetails: FC<EventDetailsProps> = ({ match }) => {
     return <GeneralLayout title='Events'>Event not found</GeneralLayout>;
   }
 
-  const eventStatusChangeHandler = (status: Status) => {};
+  const eventStatusChangeHandler = async (status: Status) => {
+    const updatedEvent = { ...event, status };
+    const functions = getFunctions();
+    const updateEventFunction = httpsCallable<Event, Event>(
+      functions,
+      Callable.UpdateEvent
+    );
+    await updateEventFunction(updatedEvent);
+    updateEvent(updatedEvent);
+    setEvent(updatedEvent);
+  };
 
   const memberStatusChangeHandler = (status: Status) => {};
 

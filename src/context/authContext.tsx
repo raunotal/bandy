@@ -35,6 +35,9 @@ const defaultContext: AuthenticationContext = {
   addEventToUser: () => {
     throw new Error('Should be implemented in AuthContextProvider.');
   },
+  updateEvent: () => {
+    throw new Error('Should be implemented in AuthContextProvider.');
+  },
 };
 
 const AuthContext = createContext<AuthenticationContext>(defaultContext);
@@ -119,6 +122,16 @@ export const AuthContextProvider: FC<AuthContextProviderProps> = ({
     }));
   };
 
+  const updateEvent = (event: Event) => {
+    setUser((prevState) => {
+      const events = prevState?.events.filter((e) => e.uid !== event.uid) || [];
+      return {
+        ...prevState!,
+        events: [...events, event],
+      };
+    });
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -129,6 +142,7 @@ export const AuthContextProvider: FC<AuthContextProviderProps> = ({
         user,
         addMemberToBand,
         addEventToUser,
+        updateEvent,
       }}
     >
       {children}
