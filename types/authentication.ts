@@ -1,3 +1,5 @@
+import { Band } from './band';
+
 export interface AuthenticationContext {
   user: User | null;
   loading: boolean;
@@ -15,10 +17,6 @@ export interface CreateNewUser {
   bandName?: string;
 }
 
-export interface CreateNewUserResponse {
-  jwtToken: string;
-}
-
 export interface UserBasicInfo {
   uid: string;
   email: string;
@@ -28,5 +26,5 @@ export interface UserBasicInfo {
 
 export interface User extends UserBasicInfo {
   jwtToken: string;
-  bands: string[];
+  band: Band | null;
 }

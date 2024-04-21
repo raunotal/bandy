@@ -3,3 +3,13 @@ export interface CloudFunctionResponse {
   message: string;
   error?: string
 }
+
+export interface AddEventResponse extends CloudFunctionResponse {
+  event: {
+    uid: string;
+  };
+}
+
+export interface CreateNewUserResponse {
+  jwtToken: string;
+}

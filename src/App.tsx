@@ -1,8 +1,8 @@
 import { Route, Switch } from 'react-router-dom';
 import {
-  IonApp,
+  IonApp, IonContent,
   IonIcon,
-  IonLabel,
+  IonLabel, IonLoading, IonPage,
   IonRouterOutlet,
   IonTabBar,
   IonTabButton,
@@ -34,12 +34,13 @@ import '@ionic/react/css/text-transformation.css';
 import '@ionic/react/css/flex-utils.css';
 import '@ionic/react/css/display.css';
 import Members from './pages/Members';
-import Bands from './pages/Bands';
 import AddEvent from './pages/AddEvent';
 import React from 'react';
 import Login from './pages/Login';
 import './styles.css';
 import MemberDetails from './pages/MemberDetails';
+import { useAuth } from './context/authContext';
+import { UserRoles } from '../enums/roles';
 
 /* Theme variables */
 // import "./theme/variables.css";
@@ -47,6 +48,22 @@ import MemberDetails from './pages/MemberDetails';
 setupIonicReact();
 
 const App: React.FC = () => {
+  const { user, loading } = useAuth();
+  const isManager = user?.role === UserRoles.Manager;
+
+  if (loading) {
+    return (
+      <IonPage>
+        <IonContent>
+          <IonLoading
+            isOpen={true}
+            duration={3000}
+          />
+        </IonContent>
+      </IonPage>
+    );
+  }
+
   return (
     <IonApp>
       <IonReactRouter>
@@ -55,17 +72,12 @@ const App: React.FC = () => {
           <Route path="/">
             <IonTabs>
               <IonRouterOutlet>
-                <Route exact path="/bands" component={Bands} />
                 <Route exact path="/events" component={Events} />
                 <Route exact path="/members" component={Members} />
                 <Route exact path="/members/:id" component={MemberDetails} />
                 <Route exact path="/add-event" component={AddEvent} />
               </IonRouterOutlet>
               <IonTabBar slot="bottom">
-                <IonTabButton tab="bands" href="/bands">
-                  <IonIcon aria-hidden="true" icon={radioOutline} />
-                  <IonLabel>Bands</IonLabel>
-                </IonTabButton>
                 <IonTabButton tab="dashboard" href="/events">
                   <IonIcon icon={calendarOutline} />
                   <IonLabel>Gigs</IonLabel>
@@ -74,10 +86,12 @@ const App: React.FC = () => {
                   <IonIcon icon={peopleOutline} />
                   <IonLabel>Members</IonLabel>
                 </IonTabButton>
-                <IonTabButton tab="add-event" href="/add-event">
-                  <IonIcon aria-hidden="true" icon={addCircleOutline} />
-                  <IonLabel>Add Event</IonLabel>
-                </IonTabButton>
+                {isManager && (
+                  <IonTabButton tab="add-event" href="/add-event">
+                    <IonIcon aria-hidden="true" icon={addCircleOutline} />
+                    <IonLabel>Add Event</IonLabel>
+                  </IonTabButton>
+                )}
               </IonTabBar>
             </IonTabs>
           </Route>

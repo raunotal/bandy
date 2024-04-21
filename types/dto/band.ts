@@ -1,6 +1,6 @@
 export interface AddToMemberToBandDTO {
   bandId: string;
-  userId: string;
+  uid: string;
   name: string;
   instrument: string;
 }

@@ -1,11 +1,10 @@
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
-import { CreateNewUser, CreateNewUserResponse } from '../../../types/authentication';
+import { CreateNewUser } from '../../../types/authentication';
 import { UserRoles } from '../../../enums/roles';
 import { Collection } from '../../../enums/collection';
 import { logger } from 'firebase-functions';
-import { firestore } from 'firebase-admin';
-import FieldValue = firestore.FieldValue;
+import { CreateNewUserResponse } from '../../../types/response';
 
 if (!admin.apps.length) {
   admin.initializeApp();
@@ -18,7 +17,7 @@ export const createUser = functions.https.onCall(
     logger.info('[createUser] - data', data);
     const { email, password, name, instrument, isManager, bandName } =
       data;
-    const role = isManager ? UserRoles.MANAGER : UserRoles.MEMBER;
+    const role = isManager ? UserRoles.Manager : UserRoles.Member;
 
     try {
       const userRecord = await admin.auth().createUser({
@@ -42,10 +41,10 @@ export const createUser = functions.https.onCall(
 
       await usersCollection
         .doc(uid)
-        .set({ name, email, instrument, role, bands: [], image: IMAGE_URL });
+        .set({ name, email, instrument, role, image: IMAGE_URL });
       logger.info('[createUser] - createUser - documentCreated');
 
-      if (isManager && bandName) {
+      if (isManager) {
         const band = {
           name: bandName,
           events: [],
@@ -60,7 +59,7 @@ export const createUser = functions.https.onCall(
         logger.info('[createUser] - createBand - documentCreated');
 
         await usersCollection.doc(uid).update({
-          bands: FieldValue.arrayUnion(bandId)
+          band: bandId
         });
         logger.info('[createUser] - add band to user bands');
       }
@@ -70,7 +69,6 @@ export const createUser = functions.https.onCall(
         jwtToken
       };
     } catch (error) {
-      // Handle and return errors
       logger.error('Error creating user:', error);
       throw new functions.https.HttpsError(
         'internal',

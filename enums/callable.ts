@@ -2,5 +2,7 @@ export enum Callable {
   CreateUser = "createUser",
   GetUsersWithMemberRole = "getUsersWithMemberRole",
   GetUserProfileById = "getUserProfileById",
-  AddMemberToBand = "addMemberToBand"
+  AddMemberToBand = "addMemberToBand",
+  getUserBandDataById = "getUserBandDataById",
+  AddEventToBand = "addEventToBand",
 }

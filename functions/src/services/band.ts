@@ -1,9 +1,9 @@
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
 import { logger } from 'firebase-functions';
+import { FieldValue } from 'firebase-admin/firestore';
 import { CloudFunctionResponse } from '../../../types/response';
 import { Collection } from '../../../enums/collection';
-import { FieldValue } from 'firebase-admin/firestore';
 import { AddToMemberToBandDTO } from '../../../types/dto/band';
 
 const firestore = admin.firestore();
@@ -18,13 +18,13 @@ export const addMemberToBand = functions.https.onCall(
   ): Promise<CloudFunctionResponse> => {
     logger.log('[addMemberToBand]', data);
     try {
-      const { bandId, userId, name, instrument } = data;
+      const { bandId, uid, name, instrument } = data;
 
       await firestore
         .collection(Collection.Users)
-        .doc(userId)
+        .doc(uid)
         .update({
-          bands: FieldValue.arrayUnion(bandId)
+          band: bandId
         });
       logger.log('[addMemberToBand] - add band to user bands');
 
@@ -32,7 +32,7 @@ export const addMemberToBand = functions.https.onCall(
         .collection(Collection.Bands)
         .doc(bandId)
         .update({
-          members: FieldValue.arrayUnion({ name, instrument, userId })
+          members: FieldValue.arrayUnion({ name, instrument, uid })
         });
       logger.log('[addMemberToBand] - add entry to bandMembers collection');
 
