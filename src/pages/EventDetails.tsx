@@ -35,19 +35,15 @@ const EventDetails: FC<EventDetailsProps> = ({ match }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [match.params.uid]);
 
-  if (!event) {
+  if (!event || !user) {
     return <GeneralLayout title='Events'>Event not found</GeneralLayout>;
   }
 
-  const eventStatusChangeHandler = (status: Status) => {
-    console.log('status', status);
-  };
+  const eventStatusChangeHandler = (status: Status) => {};
 
-  const memberStatusChangeHandler = (status: Status) => {
-    console.log('status', status);
-  };
+  const memberStatusChangeHandler = (status: Status) => {};
 
-  const { description, members, status } = event;
+  const { description, members, status: eventStatus } = event;
 
   const userAsEventMember = members.find((m) => m.uid === user?.uid);
   const membersToRender = members.filter((m) => m.uid !== user?.uid);
@@ -71,7 +67,7 @@ const EventDetails: FC<EventDetailsProps> = ({ match }) => {
             <IonList>
               {isManager && (
                 <EventDetailsEventStatus
-                  value={status!}
+                  value={eventStatus!}
                   onChange={eventStatusChangeHandler}
                 />
               )}
