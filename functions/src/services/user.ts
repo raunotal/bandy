@@ -4,7 +4,12 @@ import { Collection } from '../../../enums/collection';
 import { Member } from '../../../types/member';
 import { logger } from 'firebase-functions';
 import { UserRoles } from '../../../enums/roles';
-import { GetUsersWithMemberRoleDTO } from '../../../types/dto/user';
+import { UserDocument } from '../../../types/firestore/user';
+import {
+  GetUsersWithMemberRoleDTO,
+  UserAppDataDTO,
+} from '../../../types/dto/user';
+import { Event } from '../../../types/event';
 import { Band } from '../../../types/band';
 
 if (!admin.apps.length) {
@@ -27,7 +32,7 @@ export const getUsersWithMemberRole = functions.https.onCall(
       const members = usersSnapshot.docs.map((doc) => ({
         uid: doc.id,
         name: doc.data().name,
-        instrument: doc.data().instrument
+        instrument: doc.data().instrument,
       })) as Member[];
       logger.log('[getBandMembers] - usersSnapshot/Docs/members');
       return { members };
@@ -57,7 +62,7 @@ export const getUserProfileById = functions.https.onCall(
         const data = doc.data();
         return {
           uid: doc.id,
-          ...data
+          ...data,
         } as Member;
       } else {
         return null;
@@ -73,38 +78,60 @@ export const getUserProfileById = functions.https.onCall(
   }
 );
 
-export const getUserBandDataById = functions.https.onCall(
-  async (data: { uid: string }): Promise<Band | null> => {
-    logger.log('[getUserBandDataById]');
+export const getUserAppDataById = functions.https.onCall(
+  async (data: { userId: string }): Promise<UserAppDataDTO | null> => {
+    logger.log('[getUserAppDataById]');
 
     try {
-      const { uid } = data;
-      const docRef = firestore.collection(Collection.Users).doc(uid);
-      logger.log('[getUserBandDataById] - docRef');
-      const doc = await docRef.get();
-      logger.log('[getUserBandDataById] - doc');
-      const member = doc.data() as Member;
+      const { userId } = data;
+      const userDoc = await firestore
+        .collection(Collection.Users)
+        .doc(userId)
+        .get();
+      logger.log('[getUserAppDataById] - userDoc');
 
-      if (doc.exists && member.band) {
-        logger.log('[getUserBandDataById] - member data', data);
-        const docRef = firestore.collection(Collection.Bands).doc(member.band);
-        logger.log('[getUserBandDataById] - band docRef');
-        const bandDoc = await docRef.get();
-        logger.log('[getUserBandDataById] - bandDoc');
-
-        const bandData = bandDoc.data();
-        return {
-          uid: bandDoc.id,
-          ...bandData
-        } as Band;
+      if (!userDoc.exists) {
+        logger.log('[getUserAppDataById] - No user found');
+        return null;
       }
 
-      return null;
+      const userData = userDoc.data() as UserDocument;
+      const bandId = userData.bandId;
+      const eventIds = userData.events || [];
+      logger.log('[getUserAppDataById] - bandId, eventIds', bandId, eventIds);
+
+      const bandDoc = await firestore
+        .collection(Collection.Bands)
+        .doc(bandId)
+        .get();
+      logger.log('[getUserAppDataById] - bandDoc');
+
+      const events = await Promise.all(
+        eventIds.map((eventId) =>
+          firestore.collection('Events').doc(eventId).get()
+        )
+      );
+
+      const eventsData = events.map(
+        (doc) =>
+          ({
+            uid: doc.id,
+            ...doc.data(),
+          } as Event)
+      );
+
+      return {
+        band: {
+          uid: bandDoc.id,
+          ...(bandDoc.data() as Band),
+        },
+        events: eventsData,
+      };
     } catch (error) {
-      logger.error('Error fetching getUserBandDataById:', error);
+      logger.error('Error fetching getUserAppDataById:', error);
       throw new functions.https.HttpsError(
         'internal',
-        'Error fetching getUserBandDataById',
+        'Error fetching getUserAppDataById',
         error
       );
     }

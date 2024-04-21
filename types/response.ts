@@ -1,3 +1,5 @@
+import { Event } from "./event";
+
 export interface CloudFunctionResponse {
   statusCode: number;
   message: string;
@@ -5,9 +7,7 @@ export interface CloudFunctionResponse {
 }
 
 export interface AddEventResponse extends CloudFunctionResponse {
-  event: {
-    uid: string;
-  };
+  event: Event;
 }
 
 export interface CreateNewUserResponse {

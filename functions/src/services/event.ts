@@ -3,9 +3,6 @@ import * as admin from 'firebase-admin';
 import { AddEventDTO } from '../../../types/dto/event';
 import { AddEventResponse } from '../../../types/response';
 import { logger } from 'firebase-functions';
-import { Collection } from '../../../enums/collection';
-import { FieldValue } from 'firebase-admin/firestore';
-import { EventStatus } from '../../../enums/event';
 
 const firestore = admin.firestore();
 
@@ -13,28 +10,42 @@ if (!admin.apps.length) {
   admin.initializeApp();
 }
 
-export const addEventToBand = functions.https.onCall(
+export const addEvent = functions.https.onCall(
   async (data: AddEventDTO): Promise<AddEventResponse> => {
-    logger.log('[addEventToBand]', data);
+    logger.log('[addEvent]', data);
+    const { members, ...eventData } = data;
+    const eventRef = firestore.collection('events').doc();
 
     try {
-      const { bandId, ...eventData } = data;
-      const uid = firestore.collection('dummy').doc().id;
-
-      await firestore
-        .collection(Collection.Bands)
-        .doc(bandId)
-        .update({
-          events: FieldValue.arrayUnion({ ...eventData, uid, status: EventStatus.Pending }),
+      await firestore.runTransaction(async (transaction) => {
+        transaction.set(eventRef, {
+          ...eventData,
+          members: members.map((member) => ({
+            uid: member.uid,
+            name: member.name,
+            instrument: member.instrument,
+            status: 'pending'
+          })),
         });
-      logger.log('[addEventToBand] - add event to band events');
 
-      return { statusCode: 301, message: 'Event added', event: { uid } };
+        members.forEach((member) => {
+          const userRef = firestore.collection('users').doc(member.uid!);
+          transaction.update(userRef, {
+            events: admin.firestore.FieldValue.arrayUnion(eventRef.id),
+          });
+        });
+      });
+
+      return {
+        statusCode: 301,
+        message: 'Event created',
+        event: { ...eventData, uid: eventRef.id, members },
+      };
     } catch (error) {
-      logger.error('Error adding event:', error);
+      logger.error('Transaction failed: ', error);
       throw new functions.https.HttpsError(
-        'internal',
-        'Error adding event',
+        'unknown',
+        'Transaction failed',
         error
       );
     }

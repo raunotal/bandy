@@ -1,12 +1,12 @@
-import { EventStatus } from '../../enums/event';
+import { Status } from '../../enums/event';
 
-export const getTitleTypeFromEventStatus = (status: EventStatus) => {
+export const getTitleTypeFromEventStatus = (status: Status) => {
   switch (status) {
-    case EventStatus.Confirmed:
+    case Status.Confirmed:
       return "success";
-    case EventStatus.Pending:
+    case Status.Pending:
       return "warning";
-    case EventStatus.Cancelled:
+    case Status.Cancelled:
       return "danger";
     default:
       return "medium";

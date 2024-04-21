@@ -41,13 +41,12 @@ export const createUser = functions.https.onCall(
 
       await usersCollection
         .doc(uid)
-        .set({ name, email, instrument, role, image: IMAGE_URL });
+        .set({ name, email, instrument, role, events: [], image: IMAGE_URL });
       logger.info('[createUser] - createUser - documentCreated');
 
       if (isManager) {
         const band = {
           name: bandName,
-          events: [],
           members: []
         };
 
@@ -58,8 +57,8 @@ export const createUser = functions.https.onCall(
         const { id: bandId } = await bandsCollection.add(band);
         logger.info('[createUser] - createBand - documentCreated');
 
-        await usersCollection.doc(uid).update({
-          band: bandId
+        await usersCollection.doc(uid).set({
+          bandId
         });
         logger.info('[createUser] - add band to user bands');
       }

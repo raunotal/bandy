@@ -1,11 +1,20 @@
 import { createContext, FC, useContext, useEffect, useState } from 'react';
-import { onAuthStateChanged, signInWithCustomToken, signInWithEmailAndPassword, signOut } from 'firebase/auth';
+import {
+  onAuthStateChanged,
+  signInWithCustomToken,
+  signInWithEmailAndPassword,
+  signOut,
+} from 'firebase/auth';
 import { AuthContextProviderProps } from '../../types/context/authContext';
-import { AuthenticationContext, CreateNewUser, User } from '../../types/authentication';
+import {
+  AuthenticationContext,
+  CreateNewUser,
+  User,
+} from '../../types/authentication';
 import { Callable } from '../../enums/callable';
 import { getFunctions, httpsCallable } from 'firebase/functions';
 import { auth } from '../../config/firebaseConfig';
-import { Band } from '../../types/band';
+import { UserAppDataDTO } from '../../types/dto/user';
 
 const defaultContext: AuthenticationContext = {
   user: null,
@@ -18,14 +27,16 @@ const defaultContext: AuthenticationContext = {
   },
   logOut: async () => {
     throw new Error('Should be implemented in AuthContextProvider.');
-  }
+  },
 };
 
 const AuthContext = createContext<AuthenticationContext>(defaultContext);
 
 export const useAuth = () => useContext(AuthContext);
 
-export const AuthContextProvider: FC<AuthContextProviderProps> = ({ children }) => {
+export const AuthContextProvider: FC<AuthContextProviderProps> = ({
+  children,
+}) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -36,12 +47,12 @@ export const AuthContextProvider: FC<AuthContextProviderProps> = ({ children }) 
         const jwtToken = await user.getIdTokenResult();
 
         const functions = getFunctions();
-        const getUserByIdFunction = httpsCallable<{ uid: string }, Band | null>(
-          functions,
-          Callable.getUserBandDataById
-        );
-        const result = await getUserByIdFunction({ uid });
-        const band = result.data;
+        const getUserAppDataById = httpsCallable<
+          { uid: string },
+          UserAppDataDTO
+        >(functions, Callable.GetUserAppDataById);
+        const result = await getUserAppDataById({ uid });
+        const { band, events } = result.data;
 
         setUser({
           uid,
@@ -49,7 +60,8 @@ export const AuthContextProvider: FC<AuthContextProviderProps> = ({ children }) 
           name: displayName!,
           jwtToken: jwtToken.token,
           role: jwtToken.claims.role as string,
-          band
+          band,
+          events,
         });
       } else {
         setUser(null);

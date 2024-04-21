@@ -1,4 +1,5 @@
-import { EventStatus, EventType } from '../enums/event';
+import { Status, EventType } from '../enums/event';
+import { Member } from './member';
 
 export interface Event {
   uid?: string;
@@ -7,5 +8,6 @@ export interface Event {
   eventType: EventType;
   location: string;
   venue: string;
-  status?: EventStatus;
+  status?: Status;
+  members: Member[]
 }

@@ -1,4 +1,5 @@
 import { Band } from './band';
+import { Event } from './event';
 
 export interface AuthenticationContext {
   user: User | null;
@@ -27,4 +28,5 @@ export interface UserBasicInfo {
 export interface User extends UserBasicInfo {
   jwtToken: string;
   band: Band | null;
+  events: Event[];
 }
