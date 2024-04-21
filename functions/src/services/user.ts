@@ -9,8 +9,7 @@ import {
   GetUsersWithMemberRoleDTO,
   UserAppDataDTO,
 } from '../../../types/dto/user';
-import { Event } from '../../../types/event';
-import { Band } from '../../../types/band';
+import { fetchBandData, fetchEventData } from '../helpers/fetch';
 
 if (!admin.apps.length) {
   admin.initializeApp();
@@ -111,20 +110,3 @@ export const getUserAppDataById = functions.https.onCall(
     }
   }
 );
-
-async function fetchBandData(bandId: string): Promise<Band | null> {
-  const bandDoc = await firestore
-    .collection(Collection.Bands)
-    .doc(bandId)
-    .get();
-  return bandDoc.exists
-    ? { uid: bandDoc.id, ...(bandDoc.data() as Band) }
-    : null;
-}
-
-async function fetchEventData(eventIds: string[]): Promise<Event[]> {
-  const eventDocs = await Promise.all(
-    eventIds.map((id) => firestore.collection('Events').doc(id).get())
-  );
-  return eventDocs.map((doc) => ({ uid: doc.id, ...(doc.data() as Event) }));
-}

@@ -15,6 +15,7 @@ export const addEvent = functions.https.onCall(
     logger.log('[addEvent]', data);
     const { members, ...eventData } = data;
     const eventRef = firestore.collection('events').doc();
+    const managerRef = firestore.collection('users').doc(data.managerId);
 
     try {
       await firestore.runTransaction(async (transaction) => {
@@ -24,7 +25,7 @@ export const addEvent = functions.https.onCall(
             uid: member.uid,
             name: member.name,
             instrument: member.instrument,
-            status: 'pending'
+            status: 'pending',
           })),
         });
 
@@ -33,6 +34,10 @@ export const addEvent = functions.https.onCall(
           transaction.update(userRef, {
             events: admin.firestore.FieldValue.arrayUnion(eventRef.id),
           });
+        });
+
+        transaction.update(managerRef, {
+          events: admin.firestore.FieldValue.arrayUnion(eventRef.id),
         });
       });
 

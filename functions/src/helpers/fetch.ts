@@ -2,6 +2,7 @@ import * as admin from 'firebase-admin';
 import { Event } from '../../../types/event';
 import { Band } from '../../../types/band';
 import { Collection } from '../../../enums/collection';
+import { logger } from 'firebase-functions';
 
 const firestore = admin.firestore();
 
@@ -17,7 +18,9 @@ export const fetchBandData = async (bandId: string): Promise<Band | null> => {
 
 export const fetchEventData = async (eventIds: string[]): Promise<Event[]> => {
   const eventDocs = await Promise.all(
-    eventIds.map((id) => firestore.collection('Events').doc(id).get())
+    eventIds.map((id) => firestore.collection(Collection.Events).doc(id).get())
   );
-  return eventDocs.map((doc) => ({ uid: doc.id, ...(doc.data() as Event) }));
+  const result = eventDocs.map((doc) => ({ uid: doc.id, ...(doc.data() as Event) }));
+  logger.log("result", result )
+  return result;
 };

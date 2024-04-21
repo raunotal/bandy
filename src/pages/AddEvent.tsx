@@ -11,27 +11,37 @@ import {
   IonSelect,
   IonSelectOption,
   IonTextarea,
+  SelectChangeEventDetail,
 } from '@ionic/react';
 import GeneralLayout from '../components/layout/GeneralLayout';
 import { useAuth } from '../context/authContext';
-import { AddEventDTO } from '../../types/dto/event';
 import { EventType } from '../../enums/event';
 import { faker } from '@faker-js/faker';
 import { getFunctions, httpsCallable } from 'firebase/functions';
 import { Callable } from '../../enums/callable';
 import { useHistory } from 'react-router-dom';
+import { AddEventForm } from '../../types/event';
 
 const AddEvent = () => {
   const { user } = useAuth();
   const history = useHistory();
-  const [eventData] = useState<AddEventDTO>({
-    startDateTime: new Date(),
-    endDateTime: new Date(),
+  const [selectedMembers, setSelectedMembers] = useState(
+    user?.band?.members.map((member) => member.uid) || []
+  );
+  const [eventData] = useState<AddEventForm>({
+    startDateTime: new Date().toISOString(),
+    endDateTime: new Date().toISOString(),
     eventType: EventType.Performance,
     location: faker.location.city(),
     venue: faker.company.name(),
     members: [],
   });
+
+  const handleMembersChange = (
+    event: CustomEvent<SelectChangeEventDetail<string[]>>
+  ) => {
+    setSelectedMembers(event.detail.value);
+  };
 
   // const onInputChange = (event: CustomEvent<InputChangeEventDetail>) => {
   //   const target = event.target as HTMLInputElement;
@@ -44,15 +54,22 @@ const AddEvent = () => {
 
   const addEventHandler = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    const members = user?.band?.members.filter((member) =>
+      selectedMembers.includes(member.uid)
+    );
+    // Dummy date times
     const startDateTime = new Date();
     const endDateTime = new Date(startDateTime.getTime() + 2 * 60 * 60 * 1000);
+
     const functions = getFunctions();
     const addEventFunction = httpsCallable(functions, Callable.AddEventToBand);
     await addEventFunction({
       ...eventData,
+      managerId: user!.uid,
       bandId: user!.band!.uid!,
       startDateTime,
       endDateTime,
+      members,
     });
     // add event to user bands
     history.push('/events');
@@ -120,6 +137,8 @@ const AddEvent = () => {
               label='Members'
               labelPlacement='floating'
               multiple={true}
+              onIonChange={handleMembersChange}
+              value={selectedMembers}
             >
               {members?.map((member) => (
                 <IonSelectOption key={member.uid} value={member.uid}>
