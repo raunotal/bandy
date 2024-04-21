@@ -5,6 +5,7 @@ import { AddEventResponse } from '../../../types/response';
 import { logger } from 'firebase-functions';
 import { Collection } from '../../../enums/collection';
 import { FieldValue } from 'firebase-admin/firestore';
+import { EventStatus } from '../../../enums/event';
 
 const firestore = admin.firestore();
 
@@ -24,7 +25,7 @@ export const addEventToBand = functions.https.onCall(
         .collection(Collection.Bands)
         .doc(bandId)
         .update({
-          events: FieldValue.arrayUnion({ ...eventData, uid })
+          events: FieldValue.arrayUnion({ ...eventData, uid, status: EventStatus.Pending }),
         });
       logger.log('[addEventToBand] - add event to band events');
 

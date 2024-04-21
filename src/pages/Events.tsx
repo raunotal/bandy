@@ -6,7 +6,6 @@ import { useAuth } from '../context/authContext';
 const Events = () => {
   const { user } = useAuth();
 
-  console.log(user?.band?.events);
   return (
     <GeneralLayout title="Events">
       {user?.band?.events.map((event, index) =>
