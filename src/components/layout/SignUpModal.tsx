@@ -85,7 +85,7 @@ const SignUpModal = (props: SignUpProps) => {
                       name="isManager"
                     >
                       Register as band?
-                    </IonCheckbox>;
+                    </IonCheckbox>
                   </IonItem>
                   <IonItem className="ion-margin-top">
                     <IonInput

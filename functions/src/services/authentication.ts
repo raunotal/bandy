@@ -10,20 +10,20 @@ if (!admin.apps.length) {
   admin.initializeApp();
 }
 
-const IMAGE_URL = 'https://beforeigosolutions.com/wp-content/uploads/2021/12/dummy-profile-pic-300x300-1.png';
+const IMAGE_URL =
+  'https://beforeigosolutions.com/wp-content/uploads/2021/12/dummy-profile-pic-300x300-1.png';
 
 export const createUser = functions.https.onCall(
   async (data: CreateNewUser): Promise<CreateNewUserResponse> => {
     logger.info('[createUser] - data', data);
-    const { email, password, name, instrument, isManager, bandName } =
-      data;
+    const { email, password, name, instrument, isManager, bandName } = data;
     const role = isManager ? UserRoles.Manager : UserRoles.Member;
 
     try {
       const userRecord = await admin.auth().createUser({
         email,
         password,
-        displayName: name
+        displayName: name,
       });
       logger.info('[createUser] - userCrated - userRecord');
 
@@ -31,13 +31,11 @@ export const createUser = functions.https.onCall(
       await admin.auth().setCustomUserClaims(uid, { role });
       logger.info('[createUser] - customClaimsSet');
       await admin.auth().updateUser(uid, {
-        emailVerified: true
+        emailVerified: true,
       });
       logger.info('[createUser] - userEmailVerified');
 
-      const usersCollection = admin
-        .firestore()
-        .collection(Collection.Users);
+      const usersCollection = admin.firestore().collection(Collection.Users);
 
       await usersCollection
         .doc(uid)
@@ -47,25 +45,23 @@ export const createUser = functions.https.onCall(
       if (isManager) {
         const band = {
           name: bandName,
-          members: []
+          members: [],
         };
 
-        const bandsCollection = admin
-          .firestore()
-          .collection(Collection.Bands);
+        const bandsCollection = admin.firestore().collection(Collection.Bands);
 
         const { id: bandId } = await bandsCollection.add(band);
         logger.info('[createUser] - createBand - documentCreated');
 
-        await usersCollection.doc(uid).set({
-          bandId
+        await usersCollection.doc(uid).update({
+          bandId,
         });
         logger.info('[createUser] - add band to user bands');
       }
 
       const jwtToken = await admin.auth().createCustomToken(uid);
       return {
-        jwtToken
+        jwtToken,
       };
     } catch (error) {
       logger.error('Error creating user:', error);
@@ -75,4 +71,5 @@ export const createUser = functions.https.onCall(
         error
       );
     }
-  });
+  }
+);
