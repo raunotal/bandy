@@ -10,3 +10,8 @@ export interface UserAppDataDTO {
   band: Band | null;
   events: Event[];
 }
+
+export interface RegisterTokenDTO {
+  uid: string;
+  token: string;
+}

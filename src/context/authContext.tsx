@@ -11,11 +11,13 @@ import {
 } from '../../types/context/authContext';
 import { CreateNewUser, User } from '../../types/authentication';
 import { Callable } from '../../enums/callable';
-import { getFunctions, httpsCallable } from 'firebase/functions';
-import { auth } from '../../config/firebaseConfig';
+import { httpsCallable } from 'firebase/functions';
+import { auth, functions, messaging } from '../../config/firebaseConfig';
 import { UserAppDataDTO } from '../../types/dto/user';
 import { Member } from '../../types/member';
 import { Event } from '../../types/event';
+import { requestNotificationPermission } from '../lib/firebase';
+import { onMessage } from 'firebase/messaging';
 
 const defaultContext: AuthenticationContext = {
   user: null,
@@ -56,7 +58,6 @@ export const AuthContextProvider: FC<AuthContextProviderProps> = ({
         const { uid, email, displayName } = user;
         const jwtToken = await user.getIdTokenResult();
 
-        const functions = getFunctions();
         const getUserAppDataById = httpsCallable<
           { userId: string },
           UserAppDataDTO
@@ -77,12 +78,15 @@ export const AuthContextProvider: FC<AuthContextProviderProps> = ({
         setUser(null);
       }
       setLoading(false);
+      requestNotificationPermission();
+      onMessage(messaging, (payload) => {
+        console.log('Message received. ', payload);
+      });
     });
   }, []);
 
   const signUp = async (data: CreateNewUser) => {
     try {
-      const functions = getFunctions();
       const createUser = httpsCallable<CreateNewUser, User>(
         functions,
         Callable.CreateUser

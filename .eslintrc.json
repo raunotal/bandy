@@ -35,5 +35,8 @@
     "react": {
       "version": "18"
     }
-  }
+  },
+  "ignorePatterns": [
+    "firebase-messaging-sw.js"
+  ]
 }

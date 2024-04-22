@@ -1,4 +1,4 @@
-import { Route, Switch } from 'react-router-dom';
+import { Redirect, Route, Switch } from 'react-router-dom';
 import {
   IonApp,
   IonContent,
@@ -77,6 +77,7 @@ const App: React.FC = () => {
                 <Route exact path='/members' component={Members} />
                 <Route exact path='/members/:uid' component={MemberDetails} />
                 <Route exact path='/add-event' component={AddEvent} />
+                <Redirect exact from='/' to='/events' />
               </IonRouterOutlet>
               <IonTabBar slot='bottom'>
                 <IonTabButton tab='dashboard' href='/events'>

@@ -7,9 +7,11 @@ import { UserRoles } from '../../../enums/roles';
 import { UserDocument } from '../../../types/firestore/user';
 import {
   GetUsersWithMemberRoleDTO,
+  RegisterTokenDTO,
   UserAppDataDTO,
 } from '../../../types/dto/user';
 import { fetchBandData, fetchEventData } from '../helpers/fetch';
+import { CloudFunctionResponse } from '../../../types/response';
 
 if (!admin.apps.length) {
   admin.initializeApp();
@@ -109,4 +111,29 @@ export const getUserAppDataById = functions.https.onCall(
       );
     }
   }
+);
+
+export const addFCMToken = functions.https.onCall(
+  async (data: RegisterTokenDTO): Promise<CloudFunctionResponse> => {
+    logger.log('[getUserAppDataById] Starting function');
+
+    try {
+      const { uid, token } = data;
+      await firestore.collection(Collection.Users).doc(uid).update({
+        fcm: token,
+      });
+      logger.log(
+        '[getUserAppDataById] - User document updated, new token added'
+      );
+
+      return { statusCode: 301, message: 'Token added successfully' };
+    } catch (error) {
+      logger.error('[getUserAppDataById] - Error:', error);
+      throw new functions.https.HttpsError(
+        'internal',
+        'Error fetching user app data',
+        error
+      );
+    }
+  } 
 );
