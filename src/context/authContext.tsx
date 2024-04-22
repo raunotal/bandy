@@ -12,12 +12,11 @@ import {
 import { CreateNewUser, User } from '../../types/authentication';
 import { Callable } from '../../enums/callable';
 import { httpsCallable } from 'firebase/functions';
-import { auth, functions, messaging } from '../../config/firebaseConfig';
+import { auth, functions } from '../../config/firebaseConfig';
 import { UserAppDataDTO } from '../../types/dto/user';
 import { Member } from '../../types/member';
 import { Event } from '../../types/event';
 import { requestNotificationPermission } from '../lib/firebase';
-import { onMessage } from 'firebase/messaging';
 
 const defaultContext: AuthenticationContext = {
   user: null,
@@ -55,6 +54,7 @@ export const AuthContextProvider: FC<AuthContextProviderProps> = ({
   useEffect(() => {
     return onAuthStateChanged(auth, async (user) => {
       if (user) {
+        requestNotificationPermission();
         const { uid, email, displayName } = user;
         const jwtToken = await user.getIdTokenResult();
 
@@ -64,7 +64,6 @@ export const AuthContextProvider: FC<AuthContextProviderProps> = ({
         >(functions, Callable.GetUserAppDataById);
         const result = await getUserAppDataById({ userId: uid });
         const { band, events } = result.data;
-
         setUser({
           uid,
           email: email!,
@@ -78,10 +77,6 @@ export const AuthContextProvider: FC<AuthContextProviderProps> = ({
         setUser(null);
       }
       setLoading(false);
-      requestNotificationPermission();
-      onMessage(messaging, (payload) => {
-        console.log('Message received. ', payload);
-      });
     });
   }, []);
 

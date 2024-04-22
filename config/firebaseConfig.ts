@@ -14,14 +14,15 @@ const firebaseConfig = {
   measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID,
 };
 
+
 const app = initializeApp(firebaseConfig);
 const firestore = getFirestore(app);
 const functions = getFunctions(app);
 const auth = getAuth(app);
-const messaging = getMessaging(app);
+getMessaging(app);
 
 connectAuthEmulator(auth, 'http://localhost:8001');
 connectFunctionsEmulator(functions, 'localhost', 8002);
 connectFirestoreEmulator(firestore, 'localhost', 8003);
 
-export { auth, app, functions, messaging, firestore };
+export { auth, app, functions, firestore };
