@@ -13,9 +13,7 @@ if (!admin.apps.length) {
 }
 
 export const addMemberToBand = functions.https.onCall(
-  async (
-    data: AddToMemberToBandDTO
-  ): Promise<CloudFunctionResponse> => {
+  async (data: AddToMemberToBandDTO): Promise<CloudFunctionResponse> => {
     logger.log('[addMemberToBand]', data);
     try {
       const { bandId, uid, name, instrument } = data;
@@ -24,7 +22,7 @@ export const addMemberToBand = functions.https.onCall(
         .collection(Collection.Users)
         .doc(uid)
         .update({
-          band: bandId
+          band: bandId,
         });
       logger.log('[addMemberToBand] - add band to user bands');
 
@@ -32,7 +30,7 @@ export const addMemberToBand = functions.https.onCall(
         .collection(Collection.Bands)
         .doc(bandId)
         .update({
-          members: FieldValue.arrayUnion({ name, instrument, uid })
+          members: FieldValue.arrayUnion({ name, instrument, uid }),
         });
       logger.log('[addMemberToBand] - add entry to bandMembers collection');
 

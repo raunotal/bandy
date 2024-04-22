@@ -1,5 +1,7 @@
-import { Event } from "../event";
+import { AddEventForm } from '../event';
+import { Member } from '../member';
 
-export interface AddEventDTO extends Event {
-  bandId: string;
+export interface AddEventDTO extends AddEventForm {
+  members: Member[];
+  managerId: string;
 }

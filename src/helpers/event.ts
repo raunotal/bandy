@@ -1,19 +1,19 @@
-import { EventStatus } from '../../enums/event';
+import { Status } from '../../enums/event';
 
-export const getTitleTypeFromEventStatus = (status: EventStatus) => {
+export const getTitleTypeFromEventStatus = (status: Status) => {
   switch (status) {
-    case EventStatus.Confirmed:
+    case Status.Confirmed:
       return "success";
-    case EventStatus.Pending:
+    case Status.Pending:
       return "warning";
-    case EventStatus.Cancelled:
+    case Status.Cancelled:
       return "danger";
     default:
       return "medium";
   }
 };
 
-export const extractDate = (dateTime: Date): string => {
+export const extractDate = (dateTime: string): string => {
   const date = new Date(dateTime);
   const options: Intl.DateTimeFormatOptions = {
     year: "numeric",
@@ -24,7 +24,7 @@ export const extractDate = (dateTime: Date): string => {
   return formatter.format(date);
 };
 
-export const extractTime = (dateTime: Date): string => {
+export const extractTime = (dateTime: string): string => {
   const date = new Date(dateTime);
   return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 };

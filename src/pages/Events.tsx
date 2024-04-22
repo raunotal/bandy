@@ -8,7 +8,7 @@ const Events = () => {
 
   return (
     <GeneralLayout title="Events">
-      {user?.band?.events.map((event, index) =>
+      {user?.events.map((event, index) =>
         <EventCard {...event} key={index} />
       )}
     </GeneralLayout>

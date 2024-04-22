@@ -1,4 +1,4 @@
-export enum EventStatus {
+export enum Status {
   Confirmed = 'confirmed',
   Pending = 'pending',
   Cancelled = 'cancelled',

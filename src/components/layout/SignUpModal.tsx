@@ -10,7 +10,7 @@ import {
   IonTitle,
   IonToolbar
 } from '@ionic/react';
-import React, { FormEvent, useState } from 'react';
+import { FormEvent, useState } from 'react';
 import { useAuth } from '../../context/authContext';
 import { CreateNewUser } from '../../../types/authentication';
 import { useHistory } from 'react-router-dom';
@@ -27,8 +27,8 @@ const SignUpModal = (props: SignUpProps) => {
   const { signUp } = useAuth();
   const [formData, setFormData] = useState<CreateNewUser>({
     name: faker.person.firstName(),
-    email: '',
-    password: '',
+    email: faker.internet.email(),
+    password: '123123',
     isManager: false,
     bandName: faker.vehicle.manufacturer(),
     instrument: faker.hacker.noun()
@@ -56,8 +56,6 @@ const SignUpModal = (props: SignUpProps) => {
     event.preventDefault();
     await signUp({
       ...formData,
-      email: faker.internet.email(),
-      password: '123123',
       isManager: formData.isManager
     });
     // await signUp(formData);
@@ -87,7 +85,7 @@ const SignUpModal = (props: SignUpProps) => {
                       name="isManager"
                     >
                       Register as band?
-                    </IonCheckbox>;
+                    </IonCheckbox>
                   </IonItem>
                   <IonItem className="ion-margin-top">
                     <IonInput
@@ -105,6 +103,7 @@ const SignUpModal = (props: SignUpProps) => {
                       label="Email"
                       labelPlacement="floating"
                       type="email"
+                      value={formData.email}
                       onIonChange={onInputChange}
                       onIonInput={onInputChange}
                       autocomplete="off"
@@ -117,6 +116,7 @@ const SignUpModal = (props: SignUpProps) => {
                       label="Password"
                       labelPlacement="floating"
                       type="password"
+                      value={formData.password}
                       minlength={6}
                       onIonInput={onInputChange}
                       autocomplete="off"
