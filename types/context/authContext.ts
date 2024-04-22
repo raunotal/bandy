@@ -15,4 +15,5 @@ export interface AuthenticationContext {
   logOut: () => Promise<void>;
   addMemberToBand: (member: Member) => void;
   addEventToUser: (event: Event) => void;
+  updateEvent: (event: Event) => void;
 }

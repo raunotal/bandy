@@ -4,5 +4,6 @@ export enum Callable {
   GetUserProfileById = "getUserProfileById",
   AddMemberToBand = "addMemberToBand",
   GetUserAppDataById = "getUserAppDataById",
-  AddEventToBand = "addEvent",
+  AddEvent = "addEvent",
+  UpdateEvent = "updateEvent",
 }

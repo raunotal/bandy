@@ -1,6 +1,6 @@
 import { createUser } from './services/authentication';
 import { addMemberToBand } from './services/band';
-import { addEvent } from './services/event';
+import { addEvent, updateEvent } from './services/event';
 import { getUserAppDataById, getUserProfileById, getUsersWithMemberRole } from './services/user';
 
 export {
@@ -9,5 +9,6 @@ export {
   getUsersWithMemberRole,
   getUserProfileById,
   getUserAppDataById,
-  addEvent
+  addEvent,
+  updateEvent
 };

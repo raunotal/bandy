@@ -1,13 +1,16 @@
 import { Route, Switch } from 'react-router-dom';
 import {
-  IonApp, IonContent,
+  IonApp,
+  IonContent,
   IonIcon,
-  IonLabel, IonLoading, IonPage,
+  IonLabel,
+  IonLoading,
+  IonPage,
   IonRouterOutlet,
   IonTabBar,
   IonTabButton,
   IonTabs,
-  setupIonicReact
+  setupIonicReact,
 } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 import {
@@ -40,6 +43,7 @@ import './styles.css';
 import MemberDetails from './pages/MemberDetails';
 import { useAuth } from './context/authContext';
 import { UserRoles } from '../enums/roles';
+import EventDetails from './pages/EventDetails';
 
 /* Theme variables */
 // import "./theme/variables.css";
@@ -54,10 +58,7 @@ const App: React.FC = () => {
     return (
       <IonPage>
         <IonContent>
-          <IonLoading
-            isOpen={true}
-            duration={3000}
-          />
+          <IonLoading isOpen={true} duration={3000} />
         </IonContent>
       </IonPage>
     );
@@ -67,27 +68,28 @@ const App: React.FC = () => {
     <IonApp>
       <IonReactRouter>
         <Switch>
-          <Route exact path="/login" render={() => <Login />} />
-          <Route path="/">
+          <Route exact path='/login' render={() => <Login />} />
+          <Route path='/'>
             <IonTabs>
               <IonRouterOutlet>
-                <Route exact path="/events" component={Events} />
-                <Route exact path="/members" component={Members} />
-                <Route exact path="/members/:id" component={MemberDetails} />
-                <Route exact path="/add-event" component={AddEvent} />
+                <Route exact path='/events' component={Events} />
+                <Route exact path='/events/:uid' component={EventDetails} />
+                <Route exact path='/members' component={Members} />
+                <Route exact path='/members/:uid' component={MemberDetails} />
+                <Route exact path='/add-event' component={AddEvent} />
               </IonRouterOutlet>
-              <IonTabBar slot="bottom">
-                <IonTabButton tab="dashboard" href="/events">
+              <IonTabBar slot='bottom'>
+                <IonTabButton tab='dashboard' href='/events'>
                   <IonIcon icon={calendarOutline} />
                   <IonLabel>Gigs</IonLabel>
                 </IonTabButton>
-                <IonTabButton tab="members" href="/members">
+                <IonTabButton tab='members' href='/members'>
                   <IonIcon icon={peopleOutline} />
                   <IonLabel>Members</IonLabel>
                 </IonTabButton>
                 {isManager && (
-                  <IonTabButton tab="add-event" href="/add-event">
-                    <IonIcon aria-hidden="true" icon={addCircleOutline} />
+                  <IonTabButton tab='add-event' href='/add-event'>
+                    <IonIcon aria-hidden='true' icon={addCircleOutline} />
                     <IonLabel>Add Event</IonLabel>
                   </IonTabButton>
                 )}

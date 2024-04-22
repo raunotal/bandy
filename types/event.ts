@@ -8,6 +8,7 @@ export interface Event {
   eventType: EventType;
   location: string;
   venue: string;
+  description: string;
   status?: Status;
   members: Member[]
 }
@@ -18,6 +19,7 @@ export interface AddEventForm {
   eventType: EventType;
   location: string;
   venue: string;
+  description: string;
   members: Member[];
   managerId: string
 }

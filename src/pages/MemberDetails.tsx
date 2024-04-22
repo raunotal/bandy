@@ -6,17 +6,20 @@ import { IonButton, IonCol, IonGrid, IonRow } from '@ionic/react';
 import { Member } from '../../types/member';
 import { Callable } from '../../enums/callable';
 import { getFunctions, httpsCallable } from 'firebase/functions';
+import { UserRoles } from '../../enums/roles';
+import { AddMemberToBandDTO } from '../../types/dto/band';
+import { AddMemberToBandResponse } from '../../types/response';
 
 interface MemberDetailsProps
   extends RouteComponentProps<{
-    id: string;
-  }> {
-}
+    uid: string;
+  }> {}
 
 const MemberDetails: FC<MemberDetailsProps> = ({ match }) => {
-  const { user } = useAuth();
+  const { user, addMemberToBand } = useAuth();
   const [member, setMember] = useState<Member | null>(null);
   const [loading, setLoading] = useState(true);
+  const isManager = user?.role === UserRoles.Manager;
 
   useEffect(() => {
     const fetchMember = async () => {
@@ -25,44 +28,46 @@ const MemberDetails: FC<MemberDetailsProps> = ({ match }) => {
         functions,
         Callable.GetUserProfileById
       );
-      const result = await getUserProfileByIdFunction({ uid: match.params.id });
+      const result = await getUserProfileByIdFunction({
+        uid: match.params.uid,
+      });
       return result.data;
     };
 
-    fetchMember().then(member => {
+    fetchMember().then((member) => {
       setMember(member);
       setLoading(false);
     });
-  }, [match.params.id]);
+  }, [match.params.uid]);
 
   if (loading) {
-    return <GeneralLayout title="Members">Loading...</GeneralLayout>;
+    return <GeneralLayout title='Members'>Loading...</GeneralLayout>;
   }
 
   if (!member) {
-    return <GeneralLayout title="Members">Member not found</GeneralLayout>;
+    return <GeneralLayout title='Members'>Member not found</GeneralLayout>;
   }
 
   const addMemberToBandHandler = async () => {
     const functions = getFunctions();
-    const addMemberToBandFunction = httpsCallable(
-      functions,
-      Callable.AddMemberToBand
-    );
+    const addMemberToBandFunction = httpsCallable<
+      AddMemberToBandDTO,
+      AddMemberToBandResponse
+    >(functions, Callable.AddMemberToBand);
     await addMemberToBandFunction({
-      bandId: user!.band!.uid,
-      uid: member.uid,
+      bandId: user!.band!.uid!,
+      uid: member.uid!,
       name: member.name,
-      instrument: member.instrument
+      instrument: member.instrument,
     });
-    setMember(prevState => ({
-        ...prevState!,
-        band: user!.band!.uid!
-      })
-    );
+    setMember((prevState) => ({
+      ...prevState!,
+      band: user!.band!.uid!,
+    }));
+    addMemberToBand(member);
   };
 
-  const canAddToBand = !member.band;
+  const canAddToBand = isManager && !member.band;
 
   return (
     <GeneralLayout>
@@ -73,7 +78,7 @@ const MemberDetails: FC<MemberDetailsProps> = ({ match }) => {
             <p>{member.instrument}</p>
           </IonCol>
           <IonCol>
-            <img src={member.image} alt="Member profile" />
+            <img src={member.image} alt='Member profile' />
           </IonCol>
         </IonRow>
         <IonRow>
