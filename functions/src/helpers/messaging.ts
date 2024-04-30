@@ -1,17 +1,20 @@
 import * as admin from 'firebase-admin';
 import { Member } from '../../../types/member';
+import { Collection } from '../../../enums/collection';
 
 const firestore = admin.firestore();
 
-export const getMemberDeviceTokens = async (members: Member[]) => {
+export const getMembersDeviceTokens = async (members: Member[]) => {
   const tokens = [];
   for (const member of members) {
-    const userSnapshot = await firestore
-      .collection('users')
+    const userDoc = await firestore
+      .collection(Collection.Users)
       .doc(member.uid!)
       .get();
-    const userTokens = userSnapshot.data()?.deviceTokens || [];
-    tokens.push(...userTokens);
+    const user = userDoc.data();
+    if (user?.fcmToken) {
+      tokens.push(user.fcmToken);
+    }
   }
-  return tokens.filter((t) => t); // Remove any undefined or null entries
+  return tokens;
 };

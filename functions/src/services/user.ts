@@ -120,7 +120,7 @@ export const addFCMToken = functions.https.onCall(
     try {
       const { uid, token } = data;
       await firestore.collection(Collection.Users).doc(uid).update({
-        fcm: token,
+        fcmToken: token,
       });
       logger.log(
         '[getUserAppDataById] - User document updated, new token added'
@@ -135,5 +135,5 @@ export const addFCMToken = functions.https.onCall(
         error
       );
     }
-  } 
+  }
 );

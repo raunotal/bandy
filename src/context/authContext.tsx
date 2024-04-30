@@ -17,6 +17,7 @@ import { UserAppDataDTO } from '../../types/dto/user';
 import { Member } from '../../types/member';
 import { Event } from '../../types/event';
 import { requestNotificationPermission } from '../lib/firebase';
+import { onMessage } from 'firebase/messaging';
 
 const defaultContext: AuthenticationContext = {
   user: null,
@@ -55,6 +56,13 @@ export const AuthContextProvider: FC<AuthContextProviderProps> = ({
     return onAuthStateChanged(auth, async (user) => {
       if (user) {
         requestNotificationPermission();
+        onMessage(auth, (payload) => {
+          // eslint-disable-next-line no-console
+          console.log('Message received. ', payload);
+          new Notification(payload.notification!.title!, {
+            body: payload.notification!.body,
+          });
+        });
         const { uid, email, displayName } = user;
         const jwtToken = await user.getIdTokenResult();
 

@@ -1,7 +1,7 @@
 import { getMessaging, getToken } from 'firebase/messaging';
-import { auth, firestore } from '../../config/firebaseConfig';
-import { doc, updateDoc } from 'firebase/firestore';
-import { Collection } from '../../enums/collection';
+import { auth, functions } from '../../config/firebaseConfig';
+import { httpsCallable } from 'firebase/functions';
+import { Callable } from '../../enums/callable';
 
 export const requestNotificationPermission = async () => {
   try {
@@ -13,14 +13,8 @@ export const requestNotificationPermission = async () => {
       });
       if (token) {
         if (auth.currentUser) {
-          const userRef = doc(
-            firestore,
-            Collection.Users,
-            auth.currentUser.uid
-          );
-          await updateDoc(userRef, {
-            fcmToken: token,
-          });
+          const addFCMToken = httpsCallable(functions, Callable.AddFCMToken);
+          await addFCMToken({ uid: auth.currentUser.uid, token });
         }
       }
     }

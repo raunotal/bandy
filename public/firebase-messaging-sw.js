@@ -30,3 +30,22 @@ messaging.onBackgroundMessage(messaging, (payload) => {
 
   self.registration.showNotification(notificationTitle, notificationOptions);
 });
+
+
+// TODO: Add event listener for notification click
+// self.addEventListener('notificationclick', function(event) {
+//   event.notification.close(); // Close the notification
+
+//   // Open the URL or focus if already opened
+//   event.waitUntil(
+//     clients.matchAll({ type: 'window' }).then(clientList => {
+//       for (var i = 0; i < clientList.length; i++) {
+//         var client = clientList[i];
+//         if (client.url === event.notification.data.url && 'focus' in client)
+//           return client.focus();
+//       }
+//       if (clients.openWindow)
+//         return clients.openWindow(event.notification.data.url);
+//     })
+//   );
+// });
