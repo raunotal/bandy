@@ -1,36 +1,53 @@
 import { getToken, onMessage } from 'firebase/messaging';
-import { messaging } from '../../config/firebaseConfig';
+import { functions, messaging } from '../../config/firebaseConfig';
+import { httpsCallable } from 'firebase/functions';
+import { Callable } from '../../enums/callable';
 
 class PushNotifications {
   private static notificationsAllowed: boolean = false;
 
-  public static async requestPermission(): Promise<boolean> {
+  public static async initPushNotifications(uid: string) {
+    await this.requestPermission();
+    if (!this.notificationsAllowed) {
+      throw new Error('Notifications are not allowed!');
+    }
+
+    this.activateMessageHandler();
+    const token = await this.getFcmToken();
+    await this.addFcmTokenToUser(uid, token);
+  }
+
+  public static async requestPermission(): Promise<void> {
     if (!this.notificationsAllowed) {
       await Notification.requestPermission();
       this.notificationsAllowed = true;
     }
-    return this.notificationsAllowed;
   }
 
-  public static async getFcmToken() {
+  private static async getFcmToken() {
     if (!this.notificationsAllowed) {
       await this.requestPermission();
     }
 
     return await getToken(messaging, {
-      vapidKey: import.meta.env.VITE_FIREBASE_VAPID_KEY,
+      vapidKey: import.meta.env.VITE_FIREBASE_VAPID_KEY
     });
   }
 
-  public static activateMessageHandler() {
+  private static activateMessageHandler() {
     onMessage(messaging, (payload) => {
       if (payload) {
         new Notification(payload.notification!.title!, {
           body: payload.notification!.body,
-          icon: payload.notification!.icon,
+          icon: payload.notification!.icon
         });
       }
     });
+  }
+
+  private static async addFcmTokenToUser(uid: string, token: string): Promise<void> {
+    const addFCMToken = httpsCallable(functions, Callable.AddFcmToken);
+    await addFCMToken({ uid, token });
   }
 }
 

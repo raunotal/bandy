@@ -1,5 +1,6 @@
 import { Redirect, Route, Switch } from 'react-router-dom';
 import {
+  IonAlert,
   IonApp,
   IonContent,
   IonIcon,
@@ -10,13 +11,13 @@ import {
   IonTabBar,
   IonTabButton,
   IonTabs,
-  setupIonicReact,
+  setupIonicReact
 } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 import {
   addCircleOutline,
   calendarOutline,
-  peopleOutline,
+  peopleOutline
 } from 'ionicons/icons';
 import Events from './pages/Events';
 
@@ -37,13 +38,15 @@ import '@ionic/react/css/flex-utils.css';
 import '@ionic/react/css/display.css';
 import Members from './pages/Members';
 import AddEvent from './pages/AddEvent';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Login from './pages/Login';
 import './styles.css';
 import MemberDetails from './pages/MemberDetails';
 import { useAuth } from './context/authContext';
 import { UserRoles } from '../enums/roles';
 import EventDetails from './pages/EventDetails';
+import PushNotifications from './lib/pushNotifications';
+import { Alert } from '../types/app';
 
 /* Theme variables */
 // import "./theme/variables.css";
@@ -51,58 +54,79 @@ import EventDetails from './pages/EventDetails';
 setupIonicReact();
 
 const App: React.FC = () => {
-  const { user, loading } = useAuth();
-  const isManager = user?.role === UserRoles.Manager;
+    const [error, setError] = useState<Alert | null>(null);
+    const { user, loading } = useAuth();
+    const isManager = user?.role === UserRoles.Manager;
 
-  if (loading) {
+    useEffect(() => {
+      if (user) {
+        PushNotifications.initPushNotifications(user.uid).catch((error) => {
+          setError({
+            header: error.message,
+            message: 'Enable notifications in your browser settings or press \'Enable Notifications\' in the menu.'
+          });
+        });
+      }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [user?.uid]);
+
+
+    if (loading) {
+      return (
+        <IonPage>
+          <IonContent>
+            <IonLoading isOpen={true} duration={3000} />
+          </IonContent>
+        </IonPage>
+      );
+    }
+
     return (
-      <IonPage>
-        <IonContent>
-          <IonLoading isOpen={true} duration={3000} />
-        </IonContent>
-      </IonPage>
+      <IonApp>
+        <IonReactRouter>
+          <Switch>
+            <Route exact path="/login" render={() => <Login />} />
+            <Route exact path="/">
+              <Redirect to="/events" />
+            </Route>
+            <Route path="/">
+              <IonTabs>
+                <IonRouterOutlet>
+                  <Route exact path="/events" component={Events} />
+                  <Route exact path="/events/:uid" component={EventDetails} />
+                  <Route exact path="/members" component={Members} />
+                  <Route exact path="/members/:uid" component={MemberDetails} />
+                  <Route exact path="/add-event" component={AddEvent} />
+                </IonRouterOutlet>
+                <IonTabBar slot="bottom">
+                  <IonTabButton tab="dashboard" href="/events">
+                    <IonIcon icon={calendarOutline} />
+                    <IonLabel>Gigs</IonLabel>
+                  </IonTabButton>
+                  <IonTabButton tab="members" href="/members">
+                    <IonIcon icon={peopleOutline} />
+                    <IonLabel>Members</IonLabel>
+                  </IonTabButton>
+                  {isManager && (
+                    <IonTabButton tab="add-event" href="/add-event">
+                      <IonIcon aria-hidden="true" icon={addCircleOutline} />
+                      <IonLabel>Add Event</IonLabel>
+                    </IonTabButton>
+                  )}
+                </IonTabBar>
+              </IonTabs>
+            </Route>
+          </Switch>
+        </IonReactRouter>
+        <IonAlert
+          isOpen={error !== null}
+          header={error?.header}
+          message={error?.message}
+          buttons={['OK']}
+        />
+      </IonApp>
     );
   }
-
-  return (
-    <IonApp>
-      <IonReactRouter>
-        <Switch>
-          <Route exact path='/login' render={() => <Login />} />
-          <Route exact path="/">
-            <Redirect to="/events" />
-          </Route>
-          <Route path='/'>
-            <IonTabs>
-              <IonRouterOutlet>
-                <Route exact path='/events' component={Events} />
-                <Route exact path='/events/:uid' component={EventDetails} />
-                <Route exact path='/members' component={Members} />
-                <Route exact path='/members/:uid' component={MemberDetails} />
-                <Route exact path='/add-event' component={AddEvent} />
-              </IonRouterOutlet>
-              <IonTabBar slot='bottom'>
-                <IonTabButton tab='dashboard' href='/events'>
-                  <IonIcon icon={calendarOutline} />
-                  <IonLabel>Gigs</IonLabel>
-                </IonTabButton>
-                <IonTabButton tab='members' href='/members'>
-                  <IonIcon icon={peopleOutline} />
-                  <IonLabel>Members</IonLabel>
-                </IonTabButton>
-                {isManager && (
-                  <IonTabButton tab='add-event' href='/add-event'>
-                    <IonIcon aria-hidden='true' icon={addCircleOutline} />
-                    <IonLabel>Add Event</IonLabel>
-                  </IonTabButton>
-                )}
-              </IonTabBar>
-            </IonTabs>
-          </Route>
-        </Switch>
-      </IonReactRouter>
-    </IonApp>
-  );
-};
+;
 
 export default App;

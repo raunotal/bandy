@@ -1,4 +1,4 @@
-import { IonMenu, IonContent, IonList, IonItem, IonText } from '@ionic/react'
+import { IonMenu, IonContent, IonList, IonItem, IonText } from '@ionic/react';
 import { useAuth } from '../../context/authContext';
 import PushNotifications from '../../lib/pushNotifications';
 
@@ -7,11 +7,8 @@ const Menu = () => {
   const { user, logOut } = auth;
 
   const enableNotifications = async () => {
-    const notificationsAllowed = await PushNotifications.requestPermission();
-    if (notificationsAllowed) {
-      PushNotifications.activateMessageHandler();
-    }
-  }
+    await PushNotifications.requestPermission();
+  };
 
   return (
     <IonMenu contentId="main-content" type="push" side="start">
@@ -29,7 +26,7 @@ const Menu = () => {
         </IonList>
       </IonContent>
     </IonMenu>
-  )
-}
+  );
+};
 
-export default Menu
+export default Menu;

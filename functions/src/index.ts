@@ -3,12 +3,13 @@ import { addMemberToBand } from './services/band';
 import {
   addEvent,
   updateEventStatus,
-  updateUserEventStatus,
+  updateUserEventStatus
 } from './services/event';
 import {
   getUserAppDataById,
   getUserProfileById,
   getUsersWithMemberRole,
+  addFcmToken
 } from './services/user';
 
 export {
@@ -20,4 +21,5 @@ export {
   addEvent,
   updateEventStatus,
   updateUserEventStatus,
+  addFcmToken
 };

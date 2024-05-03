@@ -6,10 +6,11 @@ import { logger } from 'firebase-functions';
 import { UserRoles } from '../../../enums/roles';
 import { UserDocument } from '../../../types/firestore/user';
 import {
-  GetUsersWithMemberRoleDTO,
-  UserAppDataDTO,
+  GetUsersWithMemberRoleDTO, RegisterTokenDTO,
+  UserAppDataDTO
 } from '../../../types/dto/user';
 import { fetchBandData, fetchEventData } from '../helpers/fetch';
+import { CloudFunctionResponse } from '../../../types/response';
 
 if (!admin.apps.length) {
   admin.initializeApp();
@@ -31,7 +32,7 @@ export const getUsersWithMemberRole = functions.https.onCall(
       const members = usersSnapshot.docs.map((doc) => ({
         uid: doc.id,
         name: doc.data().name,
-        instrument: doc.data().instrument,
+        instrument: doc.data().instrument
       })) as Member[];
       logger.log('[getBandMembers] - usersSnapshot/Docs/members');
       return { members };
@@ -64,7 +65,7 @@ export const getUserProfileById = functions.https.onCall(
       const data = doc.data();
       return {
         uid: doc.id,
-        ...data,
+        ...data
       } as Member;
     } catch (error) {
       logger.error('Error fetching getUserProfileById:', error);
@@ -105,6 +106,31 @@ export const getUserAppDataById = functions.https.onCall(
       throw new functions.https.HttpsError(
         'internal',
         'Error fetching user app data',
+        error
+      );
+    }
+  }
+);
+
+export const addFcmToken = functions.https.onCall(
+  async (data: RegisterTokenDTO): Promise<CloudFunctionResponse> => {
+    logger.log('[addFCMToken] Starting function');
+
+    try {
+      const { uid, token } = data;
+      await firestore.collection(Collection.Users).doc(uid).update({
+        fcmToken: token
+      });
+      logger.log(
+        '[addFCMToken] - User document updated, new token added'
+      );
+
+      return { statusCode: 301, message: 'Token added successfully' };
+    } catch (error) {
+      logger.error('[addFCMToken] - Error:', error);
+      throw new functions.https.HttpsError(
+        'internal',
+        'Error adding token to user document',
         error
       );
     }
