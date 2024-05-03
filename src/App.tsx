@@ -1,4 +1,4 @@
-import { Route, Switch } from 'react-router-dom';
+import { Redirect, Route, Switch } from 'react-router-dom';
 import {
   IonApp,
   IonContent,
@@ -69,6 +69,9 @@ const App: React.FC = () => {
       <IonReactRouter>
         <Switch>
           <Route exact path='/login' render={() => <Login />} />
+          <Route exact path="/">
+            <Redirect to="/events" />
+          </Route>
           <Route path='/'>
             <IonTabs>
               <IonRouterOutlet>
