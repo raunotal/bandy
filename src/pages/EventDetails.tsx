@@ -90,13 +90,11 @@ const EventDetails: FC<EventDetailsProps> = ({ match }) => {
         <IonRow>
           <IonCol>
             <IonList>
-              {isManager && (
-                <EventDetailsStatus
-                  isManager={isManager}
-                  value={currentStatus!}
-                  onChange={isManager ? eventStatusChangeHandler : memberStatusChangeHandler}
-                />
-              )}
+              <EventDetailsStatus
+                isManager={isManager}
+                value={currentStatus!}
+                onChange={isManager ? eventStatusChangeHandler : memberStatusChangeHandler}
+              />
               <div className='ion-padding' />
               {membersToRender.map((m) => (
                 <IonItem key={m.uid}>
