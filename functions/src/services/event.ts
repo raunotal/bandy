@@ -8,6 +8,7 @@ import { Event } from '../../../types/event';
 import { Collection } from '../../../enums/collection';
 import { FieldValue } from 'firebase-admin/firestore';
 import { getMembersDeviceTokens } from '../helpers/messaging';
+import { User } from '../../../types/authentication';
 
 const firestore = admin.firestore();
 const messaging = admin.messaging();
@@ -26,26 +27,27 @@ export const addEvent = functions.https.onCall(
       uid: member.uid,
       name: member.name,
       instrument: member.instrument,
-      status: Status.Pending,
+      status: Status.Pending
     }));
 
     try {
       await firestore.runTransaction(async (transaction) => {
         transaction.set(eventRef, {
           ...eventData,
+          managerId,
           status: Status.Pending,
-          members: updatedMembers,
+          members: updatedMembers
         });
 
         members.forEach((member) => {
           const userRef = firestore.collection('users').doc(member.uid!);
           transaction.update(userRef, {
-            events: FieldValue.arrayUnion(eventRef.id),
+            events: FieldValue.arrayUnion(eventRef.id)
           });
         });
 
         transaction.update(managerRef, {
-          events: FieldValue.arrayUnion(eventRef.id),
+          events: FieldValue.arrayUnion(eventRef.id)
         });
       });
 
@@ -55,9 +57,9 @@ export const addEvent = functions.https.onCall(
         const message = {
           notification: {
             title: 'New Event Created!',
-            body: 'Please set your availability for the new event.',
+            body: 'Please set your availability for the new event.'
           },
-          tokens: tokens,
+          tokens: tokens
         };
 
         const response = await messaging.sendMulticast(message);
@@ -69,10 +71,11 @@ export const addEvent = functions.https.onCall(
         message: 'Event created',
         event: {
           ...eventData,
+          managerId,
           status: Status.Pending,
           uid: eventRef.id,
-          members: updatedMembers,
-        },
+          members: updatedMembers
+        }
       };
     } catch (error) {
       logger.error('Transaction failed: ', error);
@@ -92,7 +95,7 @@ export const updateEventStatus = functions.https.onCall(
 
     try {
       await firestore.collection(Collection.Events).doc(uid!).update({
-        status,
+        status
       });
       logger.log('[updateEventStatus] - eventRef updated');
 
@@ -115,9 +118,22 @@ export const updateUserEventStatus = functions.https.onCall(
 
     try {
       await firestore.collection(Collection.Events).doc(uid!).update({
-        members,
+        members
       });
       logger.log('[updateUserEventStatus] - eventRef updated');
+
+      const managerDoc = await firestore.collection(Collection.Users).doc(event.managerId).get();
+      const manager = managerDoc.data() as User;
+
+      const message = {
+        notification: {
+          title: 'Event Updated!',
+          body: 'The event has been updated.'
+        },
+        tokens: [manager.fcmToken]
+      }
+      logger.log('[updateUserEventStatus] - message:', message);
+      await messaging.sendMulticast(message);
 
       return event;
     } catch (error) {

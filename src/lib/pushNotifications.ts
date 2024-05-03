@@ -4,10 +4,9 @@ import { httpsCallable } from 'firebase/functions';
 import { Callable } from '../../enums/callable';
 
 class PushNotifications {
-  private static notificationsAllowed: boolean = false;
+  private static notificationsAllowed: boolean = Notification.permission === 'granted';
 
   public static async initPushNotifications(uid: string) {
-    await this.requestPermission();
     if (!this.notificationsAllowed) {
       throw new Error('Notifications are not allowed!');
     }
@@ -17,18 +16,15 @@ class PushNotifications {
     await this.addFcmTokenToUser(uid, token);
   }
 
-  public static async requestPermission(): Promise<void> {
+  public static async requestPermission(uid: string): Promise<void> {
     if (!this.notificationsAllowed) {
       await Notification.requestPermission();
       this.notificationsAllowed = true;
+      await this.initPushNotifications(uid)
     }
   }
 
   private static async getFcmToken() {
-    if (!this.notificationsAllowed) {
-      await this.requestPermission();
-    }
-
     return await getToken(messaging, {
       vapidKey: import.meta.env.VITE_FIREBASE_VAPID_KEY
     });
