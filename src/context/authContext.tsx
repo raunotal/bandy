@@ -62,7 +62,7 @@ export const AuthContextProvider: FC<AuthContextProviderProps> = ({
           UserAppDataDTO
         >(functions, Callable.GetUserAppDataById);
         const result = await getUserAppDataById({ userId: uid });
-        const { band, events } = result.data;
+        const { band, events, fcmToken } = result.data;
 
         setUser({
           uid,
@@ -72,6 +72,7 @@ export const AuthContextProvider: FC<AuthContextProviderProps> = ({
           role: jwtToken.claims.role as string,
           band,
           events,
+          fcmToken
         });
       } else {
         setUser(null);

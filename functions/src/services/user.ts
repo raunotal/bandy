@@ -94,13 +94,13 @@ export const getUserAppDataById = functions.https.onCall(
       }
 
       const userData = userDoc.data() as UserDocument;
-      const { bandId, events: eventIds = [] } = userData;
+      const { bandId, events: eventIds = [], fcmToken } = userData;
       logger.log('[getUserAppDataById] - Data:', bandId, eventIds);
 
       const band = bandId ? await fetchBandData(bandId) : null;
       const eventsData = eventIds.length ? await fetchEventData(eventIds) : [];
 
-      return { band, events: eventsData };
+      return { band, events: eventsData, fcmToken };
     } catch (error) {
       logger.error('[getUserAppDataById] - Error:', error);
       throw new functions.https.HttpsError(

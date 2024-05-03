@@ -7,6 +7,7 @@ export interface GetUsersWithMemberRoleDTO {
 }
 
 export interface UserAppDataDTO {
+  fcmToken: string;
   band: Band | null;
   events: Event[];
 }
