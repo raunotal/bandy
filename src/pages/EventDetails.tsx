@@ -45,7 +45,7 @@ const EventDetails: FC<EventDetailsProps> = ({ match }) => {
     const functions = getFunctions();
     const updateEventFunction = httpsCallable<Event, Event>(
       functions,
-      Callable.UpdateEvent
+      Callable.UpdateEventStatus
     );
     await updateEventFunction(updatedEvent);
     updateEvent(updatedEvent);

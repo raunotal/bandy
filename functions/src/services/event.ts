@@ -67,23 +67,23 @@ export const addEvent = functions.https.onCall(
   }
 );
 
-export const updateEvent = functions.https.onCall(
+export const updateEventStatus = functions.https.onCall(
   async (event: Event): Promise<Event | null> => {
-    logger.log('[updateEvent]', event);
+    logger.log('[updateEventStatus]', event);
     const { uid, status } = event;
 
     try {
       await firestore.collection(Collection.Events).doc(uid!).update({
         status,
       });
-      logger.log('[updateEvent] - eventRef updated');
+      logger.log('[updateEventStatus] - eventRef updated');
 
       return event;
     } catch (error) {
-      logger.error('Error fetching updateEvent:', error);
+      logger.error('Error fetching updateEventStatus:', error);
       throw new functions.https.HttpsError(
         'internal',
-        'Error fetching updateEvent',
+        'Error fetching updateEventStatus',
         error
       );
     }
