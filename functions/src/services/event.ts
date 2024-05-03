@@ -89,3 +89,26 @@ export const updateEventStatus = functions.https.onCall(
     }
   }
 );
+
+export const updateUserEventStatus = functions.https.onCall(
+  async (event: Event): Promise<Event | null> => {
+    logger.log('[updateUserEventStatus]', event);
+    const { uid, members } = event;
+
+    try {
+      await firestore.collection(Collection.Events).doc(uid!).update({
+        members,
+      });
+      logger.log('[updateUserEventStatus] - eventRef updated');
+
+      return event;
+    } catch (error) {
+      logger.error('Error fetching updateUserEventStatus:', error);
+      throw new functions.https.HttpsError(
+        'internal',
+        'Error fetching updateUserEventStatus',
+        error
+      );
+    }
+  }
+);

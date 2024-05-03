@@ -25,7 +25,7 @@ const EventDetailsStatus = (props: EventDetailsStatusProps) => {
     <IonItem>
       <IonSelect
         name='status'
-        label={isManager ? 'Member status' : 'Event status'}
+        label={isManager ? 'Event status' : 'Your status'}
         labelPlacement='floating'
         onIonChange={handleStatusChange}
         value={value}
