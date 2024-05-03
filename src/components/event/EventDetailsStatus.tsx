@@ -7,14 +7,15 @@ import {
 import { Status } from '../../../enums/event';
 
 interface EventDetailsStatusProps {
+  isManager: boolean;
   value: Status;
   onChange: (status: Status) => void;
 }
 
 const EventDetailsStatus = (props: EventDetailsStatusProps) => {
-  const { value, onChange } = props;
+  const { isManager, value, onChange } = props;
 
-  const handleEventStatusChange = (
+  const handleStatusChange = (
     event: CustomEvent<SelectChangeEventDetail<Status>>
   ) => {
     onChange(event.detail.value);
@@ -24,9 +25,9 @@ const EventDetailsStatus = (props: EventDetailsStatusProps) => {
     <IonItem>
       <IonSelect
         name='status'
-        label='Event status'
+        label={isManager ? 'Member status' : 'Event status'}
         labelPlacement='floating'
-        onIonChange={handleEventStatusChange}
+        onIonChange={handleStatusChange}
         value={value}
       >
         <IonSelectOption value={Status.Confirmed}>Confirmed</IonSelectOption>
