@@ -9,17 +9,12 @@
   "parserOptions": {
     "ecmaVersion": 2021,
     "sourceType": "module",
-    "project": [
-      "./tsconfig.json",
-      "tsconfig.node.json"
-    ],
+    "project": ["./tsconfig.json", "tsconfig.node.json"],
     "ecmaFeatures": {
       "jsx": true
     }
   },
-  "plugins": [
-    "@typescript-eslint"
-  ],
+  "plugins": ["@typescript-eslint"],
   "extends": [
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended",
@@ -35,5 +30,6 @@
     "react": {
       "version": "18"
     }
-  }
+  },
+  "ignorePatterns": ["firebase-messaging-sw.js"]
 }

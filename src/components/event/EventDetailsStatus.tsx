@@ -6,12 +6,12 @@ import {
 } from '@ionic/react';
 import { Status } from '../../../enums/event';
 
-interface EventDetailsEventStatusProps {
+interface EventDetailsStatusProps {
   value: Status;
   onChange: (status: Status) => void;
 }
 
-const EventDetailsEventStatus = (props: EventDetailsEventStatusProps) => {
+const EventDetailsStatus = (props: EventDetailsStatusProps) => {
   const { value, onChange } = props;
 
   const handleEventStatusChange = (
@@ -37,4 +37,4 @@ const EventDetailsEventStatus = (props: EventDetailsEventStatusProps) => {
   );
 };
 
-export default EventDetailsEventStatus;
+export default EventDetailsStatus;

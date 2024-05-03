@@ -1,17 +1,16 @@
 import {
   IonButtons,
   IonContent,
-  IonHeader, IonItem,
-  IonList,
-  IonMenu,
+  IonHeader,
   IonMenuButton,
-  IonPage, IonText,
+  IonPage,
   IonTitle,
   IonToolbar
 } from '@ionic/react';
 import { ReactNode } from 'react';
 import withAuth from '../../hoc/withAuth';
 import { useAuth } from '../../context/authContext';
+import Menu from './Menu';
 
 interface GeneralLayoutProps {
   title?: string;
@@ -21,22 +20,11 @@ interface GeneralLayoutProps {
 
 const GeneralLayout = (props: GeneralLayoutProps) => {
   const { title, children, contentClassName } = props;
-  const { logOut, user } = useAuth();
+  const { user } = useAuth();
 
   return (
     <>
-      <IonMenu contentId="main-content" type="push" side="start">
-        <IonContent color="light">
-          <IonList inset>
-            <IonItem>
-              <IonText>Hello, {user?.name}!</IonText>
-            </IonItem>
-            <IonItem>
-              <IonText onClick={logOut}>Log out</IonText>
-            </IonItem>
-          </IonList>
-        </IonContent>
-      </IonMenu>
+      <Menu />
       <IonPage id="main-content">
         {user && (
           <IonHeader>
