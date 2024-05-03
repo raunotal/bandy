@@ -127,8 +127,8 @@ export const updateUserEventStatus = functions.https.onCall(
 
       const message = {
         notification: {
-          title: 'Event Updated!',
-          body: 'The event has been updated.'
+          title: 'Wow! Event Updated!',
+          body: 'Someone has changed their availability for the event.'
         },
         tokens: [manager.fcmToken]
       }
