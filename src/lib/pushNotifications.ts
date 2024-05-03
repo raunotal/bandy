@@ -9,21 +9,22 @@ class PushNotifications {
   public static async initPushNotifications(uid: string) {
     await this.requestPermission();
     if (!this.notificationsAllowed) {
-      return;
+      throw new Error('Notifications are not allowed!');
     }
 
+    this.activateMessageHandler();
     const token = await this.getFcmToken();
     await this.addFcmTokenToUser(uid, token);
   }
 
-  private static async requestPermission(): Promise<void> {
+  public static async requestPermission(): Promise<void> {
     if (!this.notificationsAllowed) {
       await Notification.requestPermission();
       this.notificationsAllowed = true;
     }
   }
 
-  public static async getFcmToken() {
+  private static async getFcmToken() {
     if (!this.notificationsAllowed) {
       await this.requestPermission();
     }
@@ -33,7 +34,7 @@ class PushNotifications {
     });
   }
 
-  public static activateMessageHandler() {
+  private static activateMessageHandler() {
     onMessage(messaging, (payload) => {
       if (payload) {
         new Notification(payload.notification!.title!, {

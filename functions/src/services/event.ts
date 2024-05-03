@@ -7,8 +7,10 @@ import { Status } from '../../../enums/event';
 import { Event } from '../../../types/event';
 import { Collection } from '../../../enums/collection';
 import { FieldValue } from 'firebase-admin/firestore';
+import { getMembersDeviceTokens } from '../helpers/messaging';
 
 const firestore = admin.firestore();
+const messaging = admin.messaging();
 
 if (!admin.apps.length) {
   admin.initializeApp();
@@ -46,6 +48,21 @@ export const addEvent = functions.https.onCall(
           events: FieldValue.arrayUnion(eventRef.id),
         });
       });
+
+      const tokens = await getMembersDeviceTokens(members);
+      logger.log('tokens:', tokens);
+      if (tokens.length > 0) {
+        const message = {
+          notification: {
+            title: 'New Event Created!',
+            body: 'Please set your availability for the new event.',
+          },
+          tokens: tokens,
+        };
+
+        const response = await messaging.sendMulticast(message);
+        logger.log('Notifications sent:', response);
+      }
 
       return {
         statusCode: 301,
