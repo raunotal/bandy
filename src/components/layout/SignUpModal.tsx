@@ -14,7 +14,6 @@ import { FormEvent, useState } from 'react';
 import { useAuth } from '../../context/authContext';
 import { CreateNewUser } from '../../../types/authentication';
 import { useHistory } from 'react-router-dom';
-import { faker } from '@faker-js/faker';
 
 interface SignUpProps {
   isOpen: boolean;
@@ -26,12 +25,12 @@ const SignUpModal = (props: SignUpProps) => {
   const history = useHistory();
   const { signUp } = useAuth();
   const [formData, setFormData] = useState<CreateNewUser>({
-    name: faker.person.firstName(),
-    email: faker.internet.email(),
-    password: '123123',
+    name: "",
+    email: "",
+    password: '',
     isManager: false,
-    bandName: faker.vehicle.manufacturer(),
-    instrument: faker.hacker.noun()
+    bandName: "",
+    instrument: ""
   });
 
   const { isManager } = formData;
@@ -54,11 +53,7 @@ const SignUpModal = (props: SignUpProps) => {
 
   const signUpUser = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    await signUp({
-      ...formData,
-      isManager: formData.isManager
-    });
-    // await signUp(formData);
+    await signUp(formData);
     history.push('/events');
   };
 
@@ -82,6 +77,7 @@ const SignUpModal = (props: SignUpProps) => {
                     <IonCheckbox
                       justify="start"
                       onClick={toggleManager}
+                      value={formData.isManager}
                       name="isManager"
                     >
                       Register as band?
