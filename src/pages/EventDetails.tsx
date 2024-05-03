@@ -95,13 +95,14 @@ const EventDetails: FC<EventDetailsProps> = ({ match }) => {
                 value={currentStatus!}
                 onChange={isManager ? eventStatusChangeHandler : memberStatusChangeHandler}
               />
-              <div className='ion-padding' />
               {membersToRender.map((m) => (
                 <IonItem key={m.uid}>
-                  <IonText>{m.name}</IonText>-
-                  <IonText color={getTitleTypeFromEventStatus(m.status!)}>
-                    {m.status}
-                  </IonText>
+                  <div style={{ display: "flex", justifyContent: "space-between", width: "100%" }}>
+                    <IonText>{m.name}</IonText>
+                    <IonText color={getTitleTypeFromEventStatus(m.status!)}>
+                      {m.status}
+                    </IonText>
+                  </div>
                 </IonItem>
               ))}
             </IonList>
