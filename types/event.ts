@@ -3,6 +3,7 @@ import { Member } from './member';
 
 export interface Event {
   uid?: string;
+  managerId: string;
   startDateTime: string;
   endDateTime: string;
   eventType: EventType;
