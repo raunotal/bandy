@@ -6,6 +6,7 @@ import { logger } from 'firebase-functions';
 import { Status } from '../../../enums/event';
 import { Event } from '../../../types/event';
 import { Collection } from '../../../enums/collection';
+import { FieldValue } from 'firebase-admin/firestore';
 
 const firestore = admin.firestore();
 
@@ -37,12 +38,12 @@ export const addEvent = functions.https.onCall(
         members.forEach((member) => {
           const userRef = firestore.collection('users').doc(member.uid!);
           transaction.update(userRef, {
-            events: admin.firestore.FieldValue.arrayUnion(eventRef.id),
+            events: FieldValue.arrayUnion(eventRef.id),
           });
         });
 
         transaction.update(managerRef, {
-          events: admin.firestore.FieldValue.arrayUnion(eventRef.id),
+          events: FieldValue.arrayUnion(eventRef.id),
         });
       });
 
