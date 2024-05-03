@@ -7,4 +7,5 @@ export enum Callable {
   AddEvent = "addEvent",
   UpdateEventStatus = "updateEventStatus",
   UpdateUserEventStatus = "updateUserEventStatus",
+  AddFcmToken = "addFcmToken",
 }
