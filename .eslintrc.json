@@ -31,5 +31,5 @@
       "version": "18"
     }
   },
-  "ignorePatterns": ["firebase-messaging-sw.js"]
+  "ignorePatterns": ["firebase-messaging-sw.js", "functions/"]
 }
