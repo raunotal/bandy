@@ -13,17 +13,16 @@ import {
 import { Event } from '../../types/event';
 import EventCard from '../components/dashboard/EventCard';
 import { Status } from '../../enums/event';
-import EventDetailsEventStatus from '../components/event/EventDetailsEventStatus';
 import { UserRoles } from '../../enums/roles';
-import EventDetailsUserStatus from '../components/event/EventDetailsUserStatus';
 import { getTitleTypeFromEventStatus } from '../helpers/event';
 import { getFunctions, httpsCallable } from 'firebase/functions';
 import { Callable } from '../../enums/callable';
+import EventDetailsStatus from '../components/event/EventDetailsStatus';
 
 interface EventDetailsProps
   extends RouteComponentProps<{
     uid: string;
-  }> {}
+  }> { }
 
 const EventDetails: FC<EventDetailsProps> = ({ match }) => {
   const { user, updateEvent } = useAuth();
@@ -53,12 +52,13 @@ const EventDetails: FC<EventDetailsProps> = ({ match }) => {
     setEvent(updatedEvent);
   };
 
-  const memberStatusChangeHandler = (status: Status) => {};
+  const memberStatusChangeHandler = (status: Status) => { };
 
   const { description, members, status: eventStatus } = event;
 
   const userAsEventMember = members.find((m) => m.uid === user?.uid);
   const membersToRender = members.filter((m) => m.uid !== user?.uid);
+  const currentStatus = isManager ? eventStatus : userAsEventMember?.status;
 
   return (
     <GeneralLayout>
@@ -78,15 +78,9 @@ const EventDetails: FC<EventDetailsProps> = ({ match }) => {
           <IonCol>
             <IonList>
               {isManager && (
-                <EventDetailsEventStatus
-                  value={eventStatus!}
-                  onChange={eventStatusChangeHandler}
-                />
-              )}
-              {!isManager && (
-                <EventDetailsUserStatus
-                  value={userAsEventMember!.status!}
-                  onChange={memberStatusChangeHandler}
+                <EventDetailsStatus
+                  value={currentStatus!}
+                  onChange={isManager ? memberStatusChangeHandler : eventStatusChangeHandler}
                 />
               )}
               <div className='ion-padding' />
