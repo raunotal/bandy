@@ -11,6 +11,8 @@ export const fetchBandData = async (bandId: string): Promise<Band | null> => {
     .collection(Collection.Bands)
     .doc(bandId)
     .get();
+
+  logger.log('bandDoc', bandDoc);
   return bandDoc.exists
     ? { uid: bandDoc.id, ...(bandDoc.data() as Band) }
     : null;
@@ -20,7 +22,10 @@ export const fetchEventData = async (eventIds: string[]): Promise<Event[]> => {
   const eventDocs = await Promise.all(
     eventIds.map((id) => firestore.collection(Collection.Events).doc(id).get())
   );
-  const result = eventDocs.map((doc) => ({ uid: doc.id, ...(doc.data() as Event) }));
-  logger.log("result", result )
+  const result = eventDocs.map((doc) => ({
+    uid: doc.id,
+    ...(doc.data() as Event),
+  }));
+  logger.log('result', result);
   return result;
 };

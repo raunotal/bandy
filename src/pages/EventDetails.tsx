@@ -18,6 +18,7 @@ import { getTitleTypeFromEventStatus } from '../helpers/event';
 import { getFunctions, httpsCallable } from 'firebase/functions';
 import { Callable } from '../../enums/callable';
 import EventDetailsStatus from '../components/event/EventDetailsStatus';
+import { functions } from '../../config/firebaseConfig';
 
 interface EventDetailsProps
   extends RouteComponentProps<{
@@ -52,7 +53,19 @@ const EventDetails: FC<EventDetailsProps> = ({ match }) => {
     setEvent(updatedEvent);
   };
 
-  const memberStatusChangeHandler = (status: Status) => { };
+  const memberStatusChangeHandler = async (status: Status) => {
+    const updatedMembers = event.members.map((m) =>
+      m.uid === user?.uid ? { ...m, status } : m
+    );
+    const updatedEvent = { ...event, members: updatedMembers };
+    const updateUserEventStatusFunction = httpsCallable<Event, Event>(
+      functions,
+      Callable.UpdateUserEventStatus
+    );
+    await updateUserEventStatusFunction(updatedEvent);
+    updateEvent(updatedEvent);
+    setEvent(updatedEvent);
+  };
 
   const { description, members, status: eventStatus } = event;
 
