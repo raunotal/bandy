@@ -1,7 +1,7 @@
 import { ReactNode } from 'react';
 import { CreateNewUser, User } from '../authentication';
 import { Member } from '../member';
-import { Event } from '../event';
+import { AddEventForm, Event } from '../event';
 import { Alert } from '../app';
 
 export interface AuthContextProviderProps {
@@ -18,6 +18,6 @@ export interface AuthenticationContext {
   login: (email: string, password: string) => Promise<void>;
   logOut: () => Promise<void>;
   addMemberToBand: (member: Member) => void;
-  addEventToUser: (event: Event) => void;
+  addEventToUser: (event: AddEventForm, members: Member[]) => void;
   updateEvent: (event: Event) => void;
 }
