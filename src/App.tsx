@@ -49,7 +49,7 @@ import PushNotifications from './lib/pushNotifications';
 import { Alert } from '../types/app';
 
 /* Theme variables */
-// import "./theme/variables.css";
+import "./theme/variables.css";
 
 setupIonicReact();
 
