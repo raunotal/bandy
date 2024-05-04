@@ -15,7 +15,7 @@ export interface UserBasicInfo {
   email: string;
   name: string;
   role: string;
-  fcmToken: string;
+  fcmToken?: string;
 }
 
 export interface User extends UserBasicInfo {
