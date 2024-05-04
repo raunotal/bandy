@@ -7,7 +7,7 @@ const Menu = () => {
   const { user, logOut } = auth;
 
   const enableNotifications = async () => {
-    await PushNotifications.requestPermission(user!.uid!);
+    await PushNotifications.requestPermission(user!.uid);
   };
 
   return (

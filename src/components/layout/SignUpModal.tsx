@@ -100,7 +100,6 @@ const SignUpModal = (props: SignUpProps) => {
                       labelPlacement="floating"
                       type="email"
                       value={formData.email}
-                      onIonChange={onInputChange}
                       onIonInput={onInputChange}
                       autocomplete="off"
                       required

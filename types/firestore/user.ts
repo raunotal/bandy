@@ -5,6 +5,7 @@ export interface UserDocument {
   name: string;
   role: string;
   image: string;
+  fcmToken: string;
   bandId: string;
   events: string[];
 }

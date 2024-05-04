@@ -20,8 +20,10 @@ const functions = getFunctions(app);
 const auth = getAuth(app);
 const messaging = getMessaging(app);
 
-connectAuthEmulator(auth, 'http://localhost:8001');
-connectFunctionsEmulator(functions, 'localhost', 8002);
-connectFirestoreEmulator(firestore, 'localhost', 8003);
+if (location.hostname === 'localhost') {
+  connectAuthEmulator(auth, 'http://localhost:8001');
+  connectFunctionsEmulator(functions, 'localhost', 8002);
+  connectFirestoreEmulator(firestore, 'localhost', 8003);
+}
 
 export { auth, app, functions, messaging };

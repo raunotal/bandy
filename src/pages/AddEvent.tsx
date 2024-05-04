@@ -17,14 +17,10 @@ import {
 import GeneralLayout from '../components/layout/GeneralLayout';
 import { useAuth } from '../context/authContext';
 import { EventType } from '../../enums/event';
-import { getFunctions, httpsCallable } from 'firebase/functions';
-import { Callable } from '../../enums/callable';
-import { useHistory } from 'react-router-dom';
-import { AddEventForm, Event } from '../../types/event';
+import { AddEventForm } from '../../types/event';
 
 const AddEvent = () => {
   const { user, addEventToUser } = useAuth();
-  const history = useHistory();
   const [selectedMembers, setSelectedMembers] = useState(
     user?.band?.members.map((member) => member.uid) || []
   );
@@ -60,19 +56,7 @@ const AddEvent = () => {
       user?.band?.members.filter((member) =>
         selectedMembers.includes(member.uid)
       ) || [];
-
-    const functions = getFunctions();
-    const addEventFunction = httpsCallable<AddEventForm, { event: Event }>(
-      functions,
-      Callable.AddEvent
-    );
-    const response = await addEventFunction({
-      ...eventData,
-      managerId: user!.uid,
-      members
-    });
-    addEventToUser(response.data.event as Event);
-    history.push(`/events/${response.data.event.uid}`);
+    addEventToUser(eventData, members);
   };
 
   const members = user?.band?.members;
@@ -101,7 +85,7 @@ const AddEvent = () => {
               label="Venue"
               labelPlacement="floating"
               value={eventData.venue}
-              onIonChange={onInputChange}
+              onIonInput={onInputChange}
               required
             ></IonInput>
           </IonItem>
@@ -111,7 +95,7 @@ const AddEvent = () => {
               label="Location"
               labelPlacement="floating"
               value={eventData.location}
-              onIonChange={onInputChange}
+              onIonInput={onInputChange}
               required
             ></IonInput>
           </IonItem>
@@ -137,7 +121,7 @@ const AddEvent = () => {
               label="Additional information:"
               labelPlacement="floating"
               value={eventData.description}
-              onIonChange={onInputChange}
+              onIonInput={onInputChange}
               autoGrow
             ></IonTextarea>
           </IonItem>

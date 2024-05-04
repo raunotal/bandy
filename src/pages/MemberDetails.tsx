@@ -7,8 +7,6 @@ import { Member } from '../../types/member';
 import { Callable } from '../../enums/callable';
 import { getFunctions, httpsCallable } from 'firebase/functions';
 import { UserRoles } from '../../enums/roles';
-import { AddMemberToBandDTO } from '../../types/dto/band';
-import { AddMemberToBandResponse } from '../../types/response';
 
 interface MemberDetailsProps
   extends RouteComponentProps<{
@@ -49,17 +47,6 @@ const MemberDetails: FC<MemberDetailsProps> = ({ match }) => {
   }
 
   const addMemberToBandHandler = async () => {
-    const functions = getFunctions();
-    const addMemberToBandFunction = httpsCallable<
-      AddMemberToBandDTO,
-      AddMemberToBandResponse
-    >(functions, Callable.AddMemberToBand);
-    await addMemberToBandFunction({
-      bandId: user!.band!.uid!,
-      uid: member.uid!,
-      name: member.name,
-      instrument: member.instrument,
-    });
     setMember((prevState) => ({
       ...prevState!,
       band: user!.band!.uid!,

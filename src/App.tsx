@@ -11,13 +11,13 @@ import {
   IonTabBar,
   IonTabButton,
   IonTabs,
-  setupIonicReact
+  setupIonicReact,
 } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 import {
   addCircleOutline,
   calendarOutline,
-  peopleOutline
+  peopleOutline,
 } from 'ionicons/icons';
 import Events from './pages/Events';
 
@@ -38,7 +38,7 @@ import '@ionic/react/css/flex-utils.css';
 import '@ionic/react/css/display.css';
 import Members from './pages/Members';
 import AddEvent from './pages/AddEvent';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import Login from './pages/Login';
 import './styles.css';
 import MemberDetails from './pages/MemberDetails';
@@ -46,87 +46,83 @@ import { useAuth } from './context/authContext';
 import { UserRoles } from '../enums/roles';
 import EventDetails from './pages/EventDetails';
 import PushNotifications from './lib/pushNotifications';
-import { Alert } from '../types/app';
 
 /* Theme variables */
-// import "./theme/variables.css";
+import "./theme/variables.css";
 
 setupIonicReact();
 
 const App: React.FC = () => {
-    const [error, setError] = useState<Alert | null>(null);
-    const { user, loading } = useAuth();
-    const isManager = user?.role === UserRoles.Manager;
+  const { user, loading, error, setError } = useAuth();
+  const isManager = user?.role === UserRoles.Manager;
 
-    useEffect(() => {
-      if (user) {
-        PushNotifications.initPushNotifications(user.uid).catch((error) => {
-          setError({
-            header: error.message,
-            message: 'Enable notifications in your browser settings or press \'Enable Notifications\' in the menu.'
-          });
+  useEffect(() => {
+    if (user) {
+      PushNotifications.initPushNotifications(user.uid).catch(() => {
+        setError({
+          header: "Notifications are not allowed or not supported!",
+          message:
+            "Add app to your home screen and press 'Enable Notifications' in the app menu.",
         });
-      }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [user?.uid]);
-
-
-    if (loading) {
-      return (
-        <IonPage>
-          <IonContent>
-            <IonLoading isOpen={true} duration={3000} />
-          </IonContent>
-        </IonPage>
-      );
+      });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user?.uid]);
 
+  if (loading) {
     return (
-      <IonApp>
-        <IonReactRouter>
-          <Switch>
-            <Route exact path="/login" render={() => <Login />} />
-            <Route exact path="/">
-              <Redirect to="/events" />
-            </Route>
-            <Route path="/">
-              <IonTabs>
-                <IonRouterOutlet>
-                  <Route exact path="/events" component={Events} />
-                  <Route exact path="/events/:uid" component={EventDetails} />
-                  <Route exact path="/members" component={Members} />
-                  <Route exact path="/members/:uid" component={MemberDetails} />
-                  <Route exact path="/add-event" component={AddEvent} />
-                </IonRouterOutlet>
-                <IonTabBar slot="bottom">
-                  <IonTabButton tab="dashboard" href="/events">
-                    <IonIcon icon={calendarOutline} />
-                    <IonLabel>Gigs</IonLabel>
-                  </IonTabButton>
-                  <IonTabButton tab="members" href="/members">
-                    <IonIcon icon={peopleOutline} />
-                    <IonLabel>Members</IonLabel>
-                  </IonTabButton>
-                  {isManager && (
-                    <IonTabButton tab="add-event" href="/add-event">
-                      <IonIcon aria-hidden="true" icon={addCircleOutline} />
-                      <IonLabel>Add Event</IonLabel>
-                    </IonTabButton>
-                  )}
-                </IonTabBar>
-              </IonTabs>
-            </Route>
-          </Switch>
-        </IonReactRouter>
-        <IonAlert
-          isOpen={error !== null}
-          header={error?.header}
-          message={error?.message}
-          buttons={['OK']}
-        />
-      </IonApp>
+      <IonPage>
+        <IonContent>
+          <IonLoading isOpen={true} duration={3000} />
+        </IonContent>
+      </IonPage>
     );
   }
-;
 
+  return (
+    <IonApp>
+      <IonReactRouter>
+        <Switch>
+          <Route exact path='/login' render={() => <Login />} />
+          <Route exact path='/'>
+            <Redirect to='/events' />
+          </Route>
+          <Route path='/'>
+            <IonTabs>
+              <IonRouterOutlet>
+                <Route exact path='/events' component={Events} />
+                <Route exact path='/events/:uid' component={EventDetails} />
+                <Route exact path='/members' component={Members} />
+                <Route exact path='/members/:uid' component={MemberDetails} />
+                <Route exact path='/add-event' component={AddEvent} />
+              </IonRouterOutlet>
+              <IonTabBar slot='bottom'>
+                <IonTabButton tab='dashboard' href='/events'>
+                  <IonIcon icon={calendarOutline} />
+                  <IonLabel>Gigs</IonLabel>
+                </IonTabButton>
+                <IonTabButton tab='members' href='/members'>
+                  <IonIcon icon={peopleOutline} />
+                  <IonLabel>Members</IonLabel>
+                </IonTabButton>
+                {isManager && (
+                  <IonTabButton tab='add-event' href='/add-event'>
+                    <IonIcon aria-hidden='true' icon={addCircleOutline} />
+                    <IonLabel>Add Event</IonLabel>
+                  </IonTabButton>
+                )}
+              </IonTabBar>
+            </IonTabs>
+          </Route>
+        </Switch>
+      </IonReactRouter>
+      <IonAlert
+        isOpen={error !== null}
+        header={error?.header}
+        message={error?.message}
+        buttons={['OK']}
+      />
+    </IonApp>
+  );
+};
 export default App;
