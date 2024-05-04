@@ -47,7 +47,6 @@ import { UserRoles } from '../enums/roles';
 import EventDetails from './pages/EventDetails';
 import PushNotifications from './lib/pushNotifications';
 import { Alert } from '../types/app';
-import { isSupported } from 'firebase/messaging';
 
 /* Theme variables */
 // import "./theme/variables.css";
@@ -65,21 +64,12 @@ const App: React.FC = () => {
         setError({
           header: error.message,
           message:
-            "Enable notifications in your browser settings or press 'Enable Notifications' in the menu.",
+            "Add app to your home screen and press 'Enable Notifications' in the app menu.",
         });
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user?.uid]);
-
-  useEffect(() => {
-    const asd = async () => {
-      const isSupportedBrowser = await isSupported();
-      console.log('isSupportedBrowser', isSupportedBrowser);
-    };
-
-    asd();
-  }, []);
 
   if (loading) {
     return (
