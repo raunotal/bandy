@@ -38,7 +38,7 @@ import '@ionic/react/css/flex-utils.css';
 import '@ionic/react/css/display.css';
 import Members from './pages/Members';
 import AddEvent from './pages/AddEvent';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import Login from './pages/Login';
 import './styles.css';
 import MemberDetails from './pages/MemberDetails';
@@ -46,7 +46,6 @@ import { useAuth } from './context/authContext';
 import { UserRoles } from '../enums/roles';
 import EventDetails from './pages/EventDetails';
 import PushNotifications from './lib/pushNotifications';
-import { Alert } from '../types/app';
 
 /* Theme variables */
 import "./theme/variables.css";
@@ -54,8 +53,7 @@ import "./theme/variables.css";
 setupIonicReact();
 
 const App: React.FC = () => {
-  const [error, setError] = useState<Alert | null>(null);
-  const { user, loading } = useAuth();
+  const { user, loading, error, setError } = useAuth();
   const isManager = user?.role === UserRoles.Manager;
 
   useEffect(() => {

@@ -101,7 +101,7 @@ const AddEvent = () => {
               label="Venue"
               labelPlacement="floating"
               value={eventData.venue}
-              onIonChange={onInputChange}
+              onIonInput={onInputChange}
               required
             ></IonInput>
           </IonItem>
@@ -111,7 +111,7 @@ const AddEvent = () => {
               label="Location"
               labelPlacement="floating"
               value={eventData.location}
-              onIonChange={onInputChange}
+              onIonInput={onInputChange}
               required
             ></IonInput>
           </IonItem>
@@ -137,7 +137,7 @@ const AddEvent = () => {
               label="Additional information:"
               labelPlacement="floating"
               value={eventData.description}
-              onIonChange={onInputChange}
+              onIonInput={onInputChange}
               autoGrow
             ></IonTextarea>
           </IonItem>

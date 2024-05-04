@@ -25,12 +25,13 @@ const Login = () => {
           <IonCol>
             <IonCardTitle className="ion-text-center ion-margin-bottom">Bandy</IonCardTitle>
             <IonItem>
-              <IonInput label="Email" labelPlacement="floating"
-                        onIonChange={(e) => setEmail(e.detail.value!)} />
+              <IonInput name="email" label="Email" labelPlacement="floating" type="email" value={email}
+                onIonInput={(e) => setEmail(e.detail.value!)} />
             </IonItem>
             <IonItem>
-              <IonInput label="Password" labelPlacement="floating" type="password"
-                        onIonChange={(e) => setPassword(e.detail.value!)} />
+              <IonInput name="password" label="Password" labelPlacement="floating" type="password" value={password}
+                onIonInput={(e) => setPassword(e.detail.value!)}
+              />
             </IonItem>
             <IonButton className="ion-margin-top" expand="block" onClick={handleLogin}>
               Log In
