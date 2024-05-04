@@ -58,9 +58,9 @@ const App: React.FC = () => {
 
   useEffect(() => {
     if (user) {
-      PushNotifications.initPushNotifications(user.uid).catch((error) => {
+      PushNotifications.initPushNotifications(user.uid).catch(() => {
         setError({
-          header: error.message,
+          header: "Notifications are not allowed or not supported!",
           message:
             "Add app to your home screen and press 'Enable Notifications' in the app menu.",
         });
