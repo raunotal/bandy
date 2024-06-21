@@ -125,15 +125,17 @@ export const updateUserEventStatus = functions.https.onCall(
       const managerDoc = await firestore.collection(Collection.Users).doc(event.managerId).get();
       const manager = managerDoc.data() as User;
 
-      const message = {
-        notification: {
-          title: 'Wow! Event Updated!',
-          body: 'Someone has changed their availability for the event.'
-        },
-        tokens: [manager.fcmToken]
+      if (manager.fcmToken) {
+        const message = {
+          notification: {
+            title: 'Wow! Event Updated!',
+            body: 'Someone has changed their availability for the event.'
+          },
+          tokens: [manager.fcmToken]
+        };
+        logger.log('[updateUserEventStatus] - message:', message);
+        await messaging.sendMulticast(message);
       }
-      logger.log('[updateUserEventStatus] - message:', message);
-      await messaging.sendMulticast(message);
 
       return event;
     } catch (error) {
